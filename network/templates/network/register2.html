@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+
+        <!--===============================================================================================-->	
+        <link rel="icon" type="image/png" href="{% static 'network/assets/images/icons/favicon.ico' %}"/>
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/fonts/iconic/css/material-design-iconic-font.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/animate/animate.css' %}">
+        <!--===============================================================================================-->	
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/css-hamburgers/hamburgers.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/animsition/css/animsition.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/select2/select2.min.css' %}">
+        <!--===============================================================================================-->	
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/daterangepicker/daterangepicker.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/util.css' %}">
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/main.css' %}">
+        <!--===============================================================================================-->
+    </head>
+    <body>
+
+        <div class="limiter">
+            <div class="container-auth" style="background-image: url({% static 'network/assets/images/bg-01.jpg' %});">
+                <div class="wrap-auth">
+                    <form class="auth-form validate-form" action="{% url 'register' %}" method="post">
+                        {% csrf_token %}
+                        <span class="auth-form-logo">
+                            <i class="zmdi zmdi-landscape"></i>
+                        </span>
+
+                        <span class="auth-form-title p-b-34 p-t-27">
+                            Registration
+                        </span>
+
+                        <div class="wrap-input100 validate-input" data-validate="Enter username">
+                            <input class="input100" type="text" name="username" placeholder="Username">
+                            <span class="focus-input100" data-placeholder=""></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Enter email">
+                            <input class="input100" type="email" name="email" placeholder="Email">
+                            <span class="focus-input100" data-placeholder=""></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <input class="input100" type="password" name="password" placeholder="Password">
+                            <span class="focus-input100" data-placeholder=""></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input" data-validate="Enter password">
+                            <input class="input100" type="password" name="confirmation" placeholder="Confirm Password">
+                            <span class="focus-input100" data-placeholder=""></span>
+                        </div>
+
+                        <div class="container-auth-form-btn">
+                            <button class="auth-form-btn">
+                                Login
+                            </button>
+                        </div>
+
+                        <div class="text-center p-t-90">
+                            <a class="txt1" href="{% url 'login' %}">
+                                Already have an account? Sign in
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+         <!--===============================================================================================-->
+         <script src="{% static 'network/assets/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+         <!--===============================================================================================-->
+             <script src="{% static 'network/assets/vendor/animsition/js/animsition.min.js' %}"></script>
+         <!--===============================================================================================-->
+             <script src="{% static 'network/assets/vendor/bootstrap/js/popper.js' %}"></script>
+             <script src="{% static 'network/assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+         <!--===============================================================================================-->
+             <script src="{% static 'network/assets/vendor/select2/select2.min.js' %}"></script>
+         <!--===============================================================================================-->
+             <script src="{% static 'network/assets/vendor/daterangepicker/moment.min.js' %}"></script>
+             <script src="{% static 'network/assets/vendor/daterangepicker/daterangepicker.js' %}"></script>
+         <!--===============================================================================================-->
+             <script src="{% static 'network/assets/vendor/countdowntime/countdowntime.js' %}"></script>
+         <!--===============================================================================================-->
+         <script src="{% static 'network/assets/js/main.js' %}"></script>
+    </body>
+</html>
