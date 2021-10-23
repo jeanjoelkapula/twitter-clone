@@ -8,6 +8,8 @@ from .models import User
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
     return render(request, "network/index.html")
 
 

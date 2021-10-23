@@ -4,6 +4,12 @@
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
+        
+
+        
+        <script src="https://use.fontawesome.com/05d3283420.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
 
@@ -32,41 +38,82 @@
     </head>
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Network</a>
-          
-            <div>
-              <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Following</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-              </ul>
-            </div>
-          </nav>
         
-        <div class="body">
-            {% block body %}
-            {% endblock %}
+        <div class="" style="height: 100%;">
+            <div class="wrapper">
+                <div class="twitter-wrap">
+                    <div class="side-left">
+                        <ul class="menu">
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="zmdi zmdi-landscape"></i>
+                                </a>
+                            </li>
+            
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="fas fa-home"></i>
+                                </a>
+                                <a href="" class="menu-link-text">
+                                    <div>
+                                        <span>All Posts</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" class="menu-link-text">
+                                    <i class="fas fa-people-arrows"></i>
+                                </a>
+                                <a href="" class="menu-link-text">
+                                    <div >
+                                        <span>Following</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a href="" class="menu-link-text">
+                                    <div >
+                                        <span>Profile</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'logout' %}">
+                                    <i class="fas fa-arrow-circle-left"></i>
+                                </a>
+                                <a href="{% url 'logout' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Logo out</span>
+                                    </div>
+                                </a>
+                            </li>
+            
+                            <li class="menu-item ">
+                                <a class="menu-link add-twit">
+                                    <i class="fas fa-feather-alt"></i>
+                                </a>
+                            </li>
+                            <li class="menu-item ">
+                                <button class="add-twit-button">
+                                    New Post
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            
+                {% block body %}
+                
+                 {% endblock %}
+                <div class="side-right">
+            
+                </div>
+            
+            </div>
+            
 
         </div>
 
