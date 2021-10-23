@@ -707,7 +707,7 @@ i + span{
   color: white;
   font-size: 20px;
 }
-.side-main .write-twit {
+.side-main .write-twit, .profile-top {
   margin-top: 60px;
   padding: 20px 10px;
   display: flex;
@@ -868,6 +868,56 @@ i + span{
 
 .post-buttons .post-button span {
   color:  #fff6;
+}
+
+.profile-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-user {
+  margin-bottom: 20px;
+}
+
+.profile-top .profile-user i {
+  font-size: 100px;
+}
+
+.profile-username {
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.profile-joined-date {
+  margin-bottom: 20px;
+}
+
+.profile-joined-date i {
+  color: #aaa7a7;
+  font-size: 20px;
+}
+
+.profile-joined-date span {
+  color: #888585;
+  font-size: 18px;
+  
+}
+
+.profile-following {
+  display: flex;
+  display: row;
+}
+
+.profile-following div {
+  display: flex;
+  flex-direction: row;
+  margin-right: 20px;
+}
+
+
+.profile-following div span {
+  margin-right: 13px;
 }
 
 @media (max-width: 1355px) {
