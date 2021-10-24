@@ -677,7 +677,7 @@ i + span{
   border-radius: 50%;
 }
 
-.add-twit-button {
+.add-twit-button, .unfollow-button button, .follow-button button{
   height: 55px;
   width: 160px;
   background-color: #b9b9b9;
@@ -727,6 +727,16 @@ i + span{
   font-size: 20px;
   outline: 0 none;
   background-color: black;
+}
+
+.main-top-bar {
+  height: 60px;
+  padding: 20px 10px;
+}
+
+.main-top-bar p {
+  font-size: 20px;
+  color: white;
 }
 
 .top-fixed {
@@ -945,3 +955,82 @@ i + span{
   }
 }
 
+.nav-tabs {
+  border-bottom: 1px solid #ffffff36;
+}
+
+.tab-link {
+  color: #a6a6a6 !important;
+  text-align: center;
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tab-link:hover, .tab-link:hover:after {
+  border: none;
+}
+
+.tab-link:focus {
+  border: none;
+}
+
+.tab-link.active {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid white !important;
+  color: white !important;
+  border-radius: 0px !important;
+}
+
+.tab-pane {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.follow-card {
+  display: grid;
+  grid-template-columns: 10% 70% 20%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.follow-user-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.follow-username {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: white;
+}
+
+.unfollow-button button{
+  height: 40px;
+  width: 95px;
+  font-size: 15px;
+  border: 1px solid #ffffff7d;
+  background: black;
+} 
+
+.unfollow-button button:hover {
+  border: 1px solid red;
+  color: red;
+  
+} 
+.unfollow-button button:hover span {
+  display: none;
+}
+
+.unfollow-button button:hover:before {
+  content: 'Unfollow';
+}
+.follow-button button {
+  height: 40px;
+  width: 95px;
+  font-size: 15px;
+}

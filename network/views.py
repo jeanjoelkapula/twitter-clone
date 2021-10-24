@@ -17,6 +17,11 @@ def profile(request):
         return HttpResponseRedirect(reverse('login'))
     return render(request, "network/profile.html")
 
+def following(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+    return render(request, "network/following.html")
+
 def login_view(request):
     if request.method == "POST":
 
