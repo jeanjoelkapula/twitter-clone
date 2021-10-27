@@ -3,14 +3,26 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
-from .models import User
+from .models import *
 
 
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
-    return render(request, "network/index.html")
+
+    if request.method == "POST":
+        post = request.POST['post']
+        post = Post(user=request.user, post=post)
+        post.save()
+        return HttpResponseRedirect(reverse('index'))
+    
+    page = request.GET.get('page', 1)
+    posts = Post.objects.all()
+    page = Paginator(posts, 10).page(page)
+
+    return render(request, "network/index.html", {"page": page})
 
 def profile(request):
     if not request.user.is_authenticated:

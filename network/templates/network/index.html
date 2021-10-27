@@ -6,298 +6,123 @@
 		<a href="#" class="link-home">Home</a>
 	</div>
 	<div class="">
-		<div class="write-twit">
-			<div class="post-user" style="width: auto; padding-left: 10px; padding-right: 10px;">
-				<i class="fas fa-user-circle"></i>
+		<form action="{% url 'index' %}" method="POST">
+			{% csrf_token %}
+			<div class="write-twit">
+				<div class="post-user" style="width: auto; padding-left: 10px; padding-right: 10px;">
+					<i class="fas fa-user-circle"></i>
+				</div>
+				<textarea name="post" id="post" cols="30" rows="3" placeholder="what's happening?"></textarea>	
 			</div>
-			<textarea name="" id="" cols="30" rows="3" placeholder="what's happening?"></textarea>	
-		</div>
-		<div style="display: flex; justify-content: right; border-bottom: 1px solid #ffffff38;">
-			<button class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
-				New Post
-			</button>
-		</div>
+			<div style="display: flex; justify-content: right; border-bottom: 1px solid #ffffff38;">
+				<button type="submit" class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
+					New Post
+				</button>
+			</div>
+		</form>
 	</div>
 	<div class="pagination-container">
 		<nav aria-label="Page navigation example">
 			<ul class="pagination">
-			  <li class="page-item disabled" >
-				<a class="page-link" href="#" aria-label="Previous">
-				  <span aria-hidden="true">&laquo;</span>
-				  <span class="sr-only">Previous</span>
-				</a>
-			  </li>
-			  <li class="page-item"><a class="page-link" href="#">1</a></li>
-			  <li class="page-item"><a class="page-link" href="#">2</a></li>
-			  <li class="page-item"><a class="page-link" href="#">3</a></li>
-			  <li class="page-item">
-				<a class="page-link" href="#" aria-label="Next">
-				  <span aria-hidden="true">&raquo;</span>
-				  <span class="sr-only">Next</span>
-				</a>
-			  </li>
+				{% if page.has_previous %}
+					<li class="page-item" >
+						<a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+							<span class="sr-only">Previous</span>
+						</a>
+					</li>
+				{% else %}
+					<li class="page-item disabled" >
+						<a class="page-link" href="#" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+							<span class="sr-only">Previous</span>
+						</a>
+					</li>
+				{% endif %}
+			  
+				<li class="page-item" style="padding-top: 5px;">Page {{ page.number }} of {{page.paginator.num_pages }}</li>					
+			{% if page.has_next %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+						<span class="sr-only">Next</span>
+					</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+						<span class="sr-only">Next</span>
+					</a>
+				</li>
+			{% endif %}
+					
 			</ul>
 		  </nav>
 	</div>
   	<div class="post-container disable-scrollbars">
+		{% for post in page.object_list %}
+			<div class="post">
+				<div class="post-user">
+					<i class="fas fa-user-circle"></i>
+				</div>
+				<div class="post-content">
+					<div class="post-username">
+						<span>{{post.user}}</span>
+					</div>
+					<div class="post-text">
+						<p>{{post.post}}</p>
+					</div>
+					<div class="post-buttons">
+						<div class="post-button">
+							<a href=""><i class="far fa-heart"></i></a>
+							<span>25</span>
+						</div>
+						<div class="post-button">
+							<a href=""><i class="fas fa-heart-broken"></i></a>
+							<span>25</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% empty %}
+			<div style="display: flex; height: 100%; justify-content: center; align-items: center;">
+				<span style="color: white; font-size: 30px;">No Posts available</span>
+			</div>
+		{% endfor %}
+
+
 		
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="post">
-		  <div class="post-user">
-			  <i class="fas fa-user-circle"></i>
-		  </div>
-		  <div class="post-content">
-			  <div class="post-username">
-				  <span>DIG Jack</span>
-			  </div>
-			  <div class="post-text">
-				  <p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-			  </div>
-			  <div class="post-buttons">
-				  <div class="post-button">
-					  <a href=""><i class="far fa-heart"></i></a>
-					  <span>25</span>
-				  </div>
-				  <div class="post-button">
-					  <a href=""><i class="fas fa-heart-broken"></i></a>
-					  <span>25</span>
-				  </div>
-			  </div>
-		  </div>
-	  </div>
-		<div class="post">
-			<div class="post-user">
-				<i class="fas fa-user-circle"></i>
-			</div>
-			<div class="post-content">
-				<div class="post-username">
-					<span>DIG Jack</span>
-				</div>
-				<div class="post-text">
-					<p>Awful awful day from us but we played a lil better in the last series and made top 8. I couldnt be prouder of my teammates' resilience today. LETS GO BOYS i love you both</p>
-				</div>
-				<div class="post-buttons">
-					<div class="post-button">
-						<a href=""><i class="far fa-heart"></i></a>
-						<span>25</span>
-					</div>
-					<div class="post-button">
-						<a href=""><i class="fas fa-heart-broken"></i></a>
-						<span>25</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="twit-modal" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
-			<div class="modal-dialog" role="document" style="min-width: 590px;">
+	</div>
+	<div id="twit-modal" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
+		<div class="modal-dialog" role="document" style="min-width: 590px;">
 			  <div class="modal-content" style="background: black; border-radius: 15px;">
 				<div class="modal-header" style="border-bottom: 1px solid #ffffff6e;">
-				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				  </button>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 				<div class="modal-body" >
-					<div class="">
-						<div class="write-twit">
-							<div class="">
-								<i class="fas fa-user-circle"></i>
+					<form action="{% url 'index' %}" method="POST">
+						{% csrf_token %}
+						<div class="">
+							<div class="write-twit">
+								<div class="">
+									<i class="fas fa-user-circle"></i>
+								</div>
+								<textarea name="post" id="post" cols="30" rows="3" placeholder="what's happening?"></textarea>	
 							</div>
-							<textarea name="" id="" cols="30" rows="3" placeholder="what's happening?"></textarea>	
-						</div>
 						<div style="display: flex; justify-content: right; ">
 							<button class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
 								New Post
 							</button>
 						</div>
-					</div>
+					</form>
 				</div>
-			  </div>
 			</div>
 		  </div>
- 	 </div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
