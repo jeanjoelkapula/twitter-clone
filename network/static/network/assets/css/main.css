@@ -708,12 +708,10 @@ i + span{
   font-size: 20px;
 }
 .side-main .write-twit, .profile-top {
-  margin-top: 60px;
   padding: 20px 10px;
   display: flex;
   background-color: black;
   color: white;
-  border-bottom: 1px solid #ffffff38;
   border-top: 1px solid #ffffff38;
 }
 .side-main .write-twit img {
@@ -740,11 +738,12 @@ i + span{
 }
 
 .top-fixed {
-  position: fixed;
   top: 0;
-  padding: 20px 10px;
+  padding-left: 20px;
+  padding-top: 16px;
   height: 60px;
   background-color: black;
+  width: 100%;
 }
 
 .top-fixed a {
@@ -806,10 +805,31 @@ i + span{
 
 /*==================================================================
 [ POST ]*/
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination .page-item {
+  
+ 
+}
+
+.pagination .page-item .page-link {
+  color: #aaa7a7;
+  background: black;
+  border:none
+}
+
+.pagination .page-item .page-link:hover {
+  color: white;
+}
+
 .post-container {
   display: flex;
   flex-direction: column;
-  height: 690px;
+  height: 590px;
   overflow-y: scroll;
   
 }
