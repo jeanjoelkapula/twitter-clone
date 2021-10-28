@@ -85,3 +85,71 @@
 
 
 })(jQuery);
+
+function like_post(button) {
+    json_data = JSON.stringify({
+        liked: 'True'
+    })
+
+    fetch(`/post/${button.dataset.post}`, {
+        method: 'PUT',
+        body: json_data
+    })
+    .then(response => response.json())
+	.then(data => {
+        
+        $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
+        
+        if (data.likes > 0) {
+            document.querySelector(`#likes-${button.dataset.post}`).innerHTML = data.likes;
+        }
+        else {
+            document.querySelector(`#likes-${button.dataset.post}`).innerHTML = "";
+        }
+   
+        if (data.dislikes > 0) {
+            document.querySelector(`#dislikes-${button.dataset.post}`).innerHTML = data.dislikes;
+        }
+        else {
+            document.querySelector(`#dislikes-${button.dataset.post}`).innerHTML = "";
+        }
+	})
+    .catch(error => {
+        console.error( error);
+    });
+}
+
+function dislike_post(button) {
+    json_data = JSON.stringify({
+        liked: 'False'
+    })
+
+    fetch(`/post/${button.dataset.post}`, {
+        method: 'PUT',
+        body: json_data
+    })
+    .then(response => response.json())
+	.then(data => {
+  
+        $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
+  
+        if (data.likes > 0) {
+            document.querySelector(`#likes-${button.dataset.post}`).innerHTML = data.likes;
+        }
+        else {
+            document.querySelector(`#likes-${button.dataset.post}`).innerHTML = "";
+        }
+   
+        if (data.dislikes > 0) {
+            document.querySelector(`#dislikes-${button.dataset.post}`).innerHTML = data.dislikes;
+        }
+        else {
+            document.querySelector(`#dislikes-${button.dataset.post}`).innerHTML = "";
+        }
+	})
+    .catch(error => {
+        console.error( error);
+    });
+}

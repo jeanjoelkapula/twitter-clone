@@ -878,6 +878,9 @@ i + span{
   margin-right: 15px;
 }
 
+.post-like-active {
+  color: white !important;
+}
 
 .post-buttons a {
   font-size: 20px;

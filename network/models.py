@@ -16,7 +16,32 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.user} {self.date_created} post"
 
+    def likes(self):
+        count = len(self.post_likes.filter(is_like=True))
+
+        if count > 0:
+            return count
+        else:
+            return "" 
+    
+    def dislikes(self):
+        count = len (self.post_likes.filter(is_like=False))
+
+        if count > 0:
+            return count
+        else:
+            return ""
+    def is_liked(self):
+        try:
+            post_like = self.post_likes.get(user=self.user, post=self)
+            return post_like.is_like
+        except PostLike.DoesNotExist:
+            return None
+
 class PostLike(models.Model):
     user = models.ForeignKey(User, null=False, on_delete = models.CASCADE)
-    Post = models.ForeignKey(Post, null=False, on_delete = models.CASCADE)
-    is_dislike = models.BooleanField(default=False)
+    post = models.ForeignKey(Post, null=False, on_delete = models.CASCADE, related_name="post_likes")
+    is_like = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Post - {self.post.id} - {self.user} - {self.is_like}"
