@@ -86,14 +86,39 @@
 
 })(jQuery);
 
+//csrf token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
 function like_post(button) {
+    const request = new Request(
+        `/post/${button.dataset.post}`,
+        {headers: {'X-CSRFToken': csrftoken}}
+    );
+
     json_data = JSON.stringify({
         liked: 'True'
     })
 
-    fetch(`/post/${button.dataset.post}`, {
+    fetch(request, {
         method: 'PUT',
-        body: json_data
+        body: json_data,
+        "mode": "same-origin"
     })
     .then(response => response.json())
 	.then(data => {
@@ -121,13 +146,19 @@ function like_post(button) {
 }
 
 function dislike_post(button) {
+    const request = new Request(
+        `/post/${button.dataset.post}`,
+        {headers: {'X-CSRFToken': csrftoken}}
+    );
+
     json_data = JSON.stringify({
         liked: 'False'
     })
 
-    fetch(`/post/${button.dataset.post}`, {
+    fetch(request, {
         method: 'PUT',
-        body: json_data
+        body: json_data,
+         "mode": "same-origin"
     })
     .then(response => response.json())
 	.then(data => {
@@ -148,6 +179,63 @@ function dislike_post(button) {
         else {
             document.querySelector(`#dislikes-${button.dataset.post}`).innerHTML = "";
         }
+	})
+    .catch(error => {
+        console.error( error);
+    });
+}
+
+function unfollow_user(id) {
+    const request = new Request(
+        `/follow/${id}`,
+        {headers: {'X-CSRFToken': csrftoken}}
+    );
+
+    json_data = JSON.stringify({
+        is_follow: 'False'
+    })
+
+    fetch(request, {
+        method: 'PUT',
+        body: json_data,
+        "mode": "same-origin"
+    })
+    .then(response => response.json())
+	.then(data => {
+        document.querySelector('#unfollow-div').style.display = "none";
+        document.querySelector('#follow-div').style.display = "block";
+
+        document.querySelector('#followers').innerHTML = data.followers;
+        document.querySelector('#followees').innerHTML = data.followees;
+	})
+    .catch(error => {
+        console.error( error);
+    });
+}
+
+
+function follow_user(id) {
+    const request = new Request(
+        `/follow/${id}`,
+        {headers: {'X-CSRFToken': csrftoken}}
+    );
+
+    json_data = JSON.stringify({
+        is_follow: 'True'
+    })
+
+    fetch(request, {
+        method: 'PUT',
+        body: json_data,
+        "mode": "same-origin"
+    })
+    .then(response => response.json())
+	.then(data => {
+        document.querySelector('#unfollow-div').style.display = "block";
+        document.querySelector('#follow-div').style.display = "none";
+
+        document.querySelector('#followers').innerHTML = data.followers;
+        document.querySelector('#followees').innerHTML = data.followees;
 	})
     .catch(error => {
         console.error( error);

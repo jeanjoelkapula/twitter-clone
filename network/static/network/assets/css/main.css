@@ -858,6 +858,10 @@ i + span{
   padding-top: 15px;
 }
 
+.post-username a {
+  color: white;
+}
+
 .post-content {
   padding-top: 15px;
   padding-right: 10px;
@@ -939,7 +943,6 @@ i + span{
 
 .profile-following {
   display: flex;
-  display: row;
 }
 
 .profile-following div {

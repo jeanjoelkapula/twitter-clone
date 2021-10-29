@@ -27,17 +27,61 @@ def index(request):
 
     return render(request, "network/index.html", {"page": page})
 
-def profile(request):
+def profile(request, user_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
-    return render(request, "network/profile.html")
+
+    #check user id 
+    try:
+        user = User.objects.get(pk=user_id)
+        
+        #get user posts
+        page = request.GET.get('page', 1)
+        posts = Post.objects.filter(user=user)
+        page = Paginator(posts, 10).page(page)
+
+        #check if request user if following user
+        if request.user != user:
+            if request.user in user.followers.all():
+                is_following = True
+            else:
+                is_following = False
+        else:
+            is_following = None
+
+        followers = len(user.followers.all())
+        followees = len(user.followees.all())
+
+        context = {
+            "header":"Profile",
+            "profile_user": user,
+            "page":page,
+            "is_following": is_following,
+            "followers":followers,
+            "followees": followees
+        }
+
+        return render(request, "network/profile.html", context)
+        
+    except User.DoesNotExist:
+        return render(request, "network/profile_not_found.html")
+    
 
 def following(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
+
+    page = request.GET.get('page', 1)
+    posts = Post.objects.all()
+    page = Paginator(posts, 10).page(page)
+
+    return render(request, "network/index.html", {"page": page})
+
+def followers(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
     return render(request, "network/following.html")
 
-@csrf_exempt
 def post(request, post_id):
 
     if request.method == "PUT":
@@ -75,6 +119,28 @@ def post(request, post_id):
             "error": "GET or PUT request required."
         }, status=400)
 
+def follow(request, user_id):
+    #check user id
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "user not found."}, status=404)
+
+    data = json.loads(request.body)
+
+    #update user following
+    if user != request.user and data.get('is_follow') is not None:
+        if data['is_follow'] == "True":
+            user.followers.add(request.user)
+            request.user.followees.add(user)
+        else:
+            user.followers.remove(request.user)
+            request.user.followees.remove(user)
+
+        followers = len(user.followers.all())
+        followees = len(user.followees.all())
+
+        return JsonResponse({"success": "User follow successfully updated", "followers":followers, "followees": followees}, status=201)
 
 def login_view(request):
     if request.method == "POST":
