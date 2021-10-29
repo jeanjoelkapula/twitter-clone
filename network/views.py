@@ -25,7 +25,7 @@ def index(request):
     posts = Post.objects.all()
     page = Paginator(posts, 10).page(page)
 
-    return render(request, "network/index.html", {"page": page})
+    return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
 def profile(request, user_id):
     if not request.user.is_authenticated:
@@ -71,11 +71,11 @@ def following(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
+    posts = Post.objects.filter(user__in=request.user.followees.all())
     page = request.GET.get('page', 1)
-    posts = Post.objects.all()
     page = Paginator(posts, 10).page(page)
 
-    return render(request, "network/index.html", {"page": page})
+    return render(request, "network/index.html", {"page": page, "header":"Following Posts"})
 
 def followers(request):
     if not request.user.is_authenticated:
