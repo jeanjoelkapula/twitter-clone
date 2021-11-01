@@ -2,364 +2,75 @@
 {% block body %}
 <div class="side-main">
   	<div class="main-top-bar">
-   	 	<p>Following</p>
+   	 	<p>{{profile_user}}</p>
   	</div>
   	<div class="" style="padding-top: 15px;">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="nav-item" style="width: 50%;">
-				<a class="nav-link tab-link active" data-toggle="tab" href="#followers" role="tab">Followers</a>
+				<a class="nav-link tab-link {% if following == 'followers' %} active {% endif %}" data-toggle="tab" href="#followers" role="tab">Followers</a>
 			</li>
 			<li class="nav-item" style="width: 50%;">
-				<a class="nav-link tab-link" data-toggle="tab" href="#following" role="tab">Following</a>
+				<a class="nav-link tab-link  {% if following == 'following' %} active {% endif %}" data-toggle="tab" href="#following" role="tab">Following</a>
 			</li>
 
 		</ul><!-- Tab panes -->
 		<div class="tab-content" >
-			<div class="tab-pane active disable-scrollbars" id="followers" role="tabpanel" style="max-height: 800px;">
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
+			<div class="tab-pane {% if following == 'followers' %} active {% endif %} disable-scrollbars" id="followers" role="tabpanel" style="max-height: 800px;">
+				{% for follower in profile_user.followers.all %}
+					<div class="follow-card post">
+						<div class="follow-user-icon">
+							<i class="fas fa-user-circle"></i>
 						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
+						<div class="follow-username">
+							<div class="post-username">
+								<span>{{follower}}</span>
+							</div>
 						</div>
+						{% if user != follower %}
+							{% if follower in user.followees.all %}
+								<div class="unfollow-button">
+									<button onclick="profile_unfollow({{follower.id}}, {{profile_user.id}});"><span>Following</span></button>
+								</div>
+							{% else %}
+								<div class="follow-button">
+									<button onclick="profile_follow({{follower.id}}, {{profile_user.id}});"><span>Follow</span></button>
+								</div>
+							{% endif %}
+						{% endif %}
 					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>Lethamyr</span>
-						</div>
-					</div>
-					<div class="follow-button">
-						<button><span>Follow</span></button>
-					</div>
-				</div>
+				{% endfor %}
 
 			</div>
-			<div class="tab-pane disable-scrollbars" id="following" role="tabpanel" style="max-height: 800px;">
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
+			<div class="tab-pane {% if following == 'following' %} active {% endif %} disable-scrollbars" id="following" role="tabpanel" style="max-height: 800px;">
+				{% for followee in profile_user.followees.all %}
+					<div class="follow-card post">
+						<div class="follow-user-icon">
+							<i class="fas fa-user-circle"></i>
 						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
+						<div class="follow-username">
+							<div class="post-username">
+								<span>{{followee}}</span>
+							</div>
 						</div>
+						{% if user != followee %}
+							{% if followee in user.followees.all %}
+								<div class="unfollow-button">
+									<button  onclick="profile_unfollow({{followee.id}}, {{profile_user.id}});"><span>Following</span></button>
+								</div>
+							{% else %}
+								<div class="follow-button">
+									<button onclick="profile_follow({{followee.id}}, {{profile_user.id}});"><span>Follow</span></button>
+								</div>
+							{% endif %}
+						{% endif %}	
 					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
-				<div class="follow-card post">
-					<div class="follow-user-icon">
-						<i class="fas fa-user-circle"></i>
-					</div>
-					<div class="follow-username">
-						<div class="post-username">
-							<span>DIG Jack</span>
-						</div>
-					</div>
-					<div class="unfollow-button">
-						<button><span>Following</span></button>
-					</div>
-				</div>
+				{% endfor %}
+	
 			</div>
 		</div>
   </div>
   
 </div>
+
+	{{ user.serialize|json_script:"user" }}
 {% endblock %}

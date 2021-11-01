@@ -18,10 +18,10 @@
 			</div>
 			<div class="profile-following">
 				<div>
-					<span id="followees">{{followees}}</span><p><a href="">Following</a></p>
+					<span id="followees">{{followees}}</span><p><a href="{% url 'followers' profile_user.id 'following' %}">Following</a></p>
 				</div>
 				<div>
-					<span id="followers">{{followers}}</span><p><a href="">Followers</a></p>
+					<span id="followers">{{followers}}</span><p><a href="{% url 'followers' profile_user.id 'followers' %}">Followers</a></p>
 				</div>
 				<div style="display: flex; margin-left: auto;">
 					{% if is_following != None %}
@@ -110,5 +110,5 @@
 		{% endfor %}
   </div>
 </div>
-
+	{{ user.serialize|json_script:"user" }}
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "network/layout.html" %}
-
+{% load post_liked %}
 {% block body %}
 <div class="side-main"> 
 	<div class="top-fixed">
@@ -75,11 +75,11 @@
 					</div>
 					<div class="post-buttons">
 						<div class="post-button">
-							<a id="like-{{post.id}}" data-post="{{post.id}}" onclick="like_post(this)"><i class="far fa-heart {% if post.is_liked != None %} {% if post.is_liked %} post-like-active {% endif %}{% endif %}"></i></a>
+							<a id="like-{{post.id}}" data-post="{{post.id}}" onclick="like_post(this)"><i class="far fa-heart {% if post|is_liked:user != None %} {% if post|is_liked:user %} post-like-active {% endif %}{% endif %}"></i></a>
 							<span id="likes-{{post.id}}">{{post.likes}}</span>
 						</div>
 						<div class="post-button">
-							<a id="dislike-{{post.id}}" data-post="{{post.id}}" onclick="dislike_post(this)"><i class="fas fa-heart-broken {% if post.is_liked != None %} {% if post.is_liked == False %} post-like-active {% endif %}{% endif %}"></i></a>
+							<a id="dislike-{{post.id}}" data-post="{{post.id}}" onclick="dislike_post(this)"><i class="fas fa-heart-broken {% if post|is_liked:user != None %} {% if post|is_liked:user == False %} post-like-active {% endif %}{% endif %}"></i></a>
 							<span id="dislikes-{{post.id}}">{{post.dislikes}}</span>
 						</div>
 					</div>

@@ -7,6 +7,14 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username}"
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "followers": [{"id": u.id, "username": u.username} for u in self.followers.all()],
+            "followees": [{"id": u.id, "username": u.username}  for u in self.followees.all()]
+        }
 
 class Post(models.Model):
     user = models.ForeignKey(User, null=False, on_delete = models.CASCADE)
