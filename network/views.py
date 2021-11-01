@@ -24,7 +24,7 @@ def index(request):
         return HttpResponseRedirect(reverse('index'))
     
     page = request.GET.get('page', 1)
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-date_created').all()
     page = Paginator(posts, 10).page(page)
 
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
@@ -39,7 +39,7 @@ def profile(request, user_id):
         
         #get user posts
         page = request.GET.get('page', 1)
-        posts = Post.objects.filter(user=user)
+        posts = Post.objects.filter(user=user).order_by('-date_created').all()
         page = Paginator(posts, 10).page(page)
 
         #check if request user if following user
@@ -69,16 +69,12 @@ def profile(request, user_id):
         return render(request, "network/profile_not_found.html")
     
 
-@register.filter
-def lower(value):
-    return value.lower()
-
 
 def following(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
-    posts = Post.objects.filter(user__in=request.user.followees.all())
+    posts = Post.objects.filter(user__in=request.user.followees.all()).order_by('-date_created').all()
     page = request.GET.get('page', 1)
     page = Paginator(posts, 10).page(page)
 

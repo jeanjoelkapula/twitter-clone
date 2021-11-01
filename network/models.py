@@ -39,12 +39,6 @@ class Post(models.Model):
             return count
         else:
             return ""
-    def is_liked(self):
-        try:
-            post_like = self.post_likes.get(user=self.user, post=self)
-            return post_like.is_like
-        except PostLike.DoesNotExist:
-            return None
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, null=False, on_delete = models.CASCADE)
