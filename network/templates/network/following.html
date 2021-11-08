@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %} 
+{% load static %}
 {% block body %}
 <div class="side-main">
   	<div class="main-top-bar">
@@ -26,15 +27,17 @@
 								<span>{{follower}}</span>
 							</div>
 						</div>
-						{% if user != follower %}
-							{% if follower in user.followees.all %}
-								<div class="unfollow-button">
-									<button onclick="profile_unfollow({{follower.id}}, {{profile_user.id}});"><span>Following</span></button>
-								</div>
-							{% else %}
-								<div class="follow-button">
-									<button onclick="profile_follow({{follower.id}}, {{profile_user.id}});"><span>Follow</span></button>
-								</div>
+						{% if user.is_authenticated %}
+							{% if user != follower %}
+								{% if follower in user.followees.all %}
+									<div class="unfollow-button">
+										<button onclick="profile_unfollow({{follower.id}}, {{profile_user.id}});"><span>Following</span></button>
+									</div>
+								{% else %}
+									<div class="follow-button">
+										<button onclick="profile_follow({{follower.id}}, {{profile_user.id}});"><span>Follow</span></button>
+									</div>
+								{% endif %}
 							{% endif %}
 						{% endif %}
 					</div>
@@ -52,16 +55,18 @@
 								<span>{{followee}}</span>
 							</div>
 						</div>
-						{% if user != followee %}
-							{% if followee in user.followees.all %}
-								<div class="unfollow-button">
-									<button  onclick="profile_unfollow({{followee.id}}, {{profile_user.id}});"><span>Following</span></button>
-								</div>
-							{% else %}
-								<div class="follow-button">
-									<button onclick="profile_follow({{followee.id}}, {{profile_user.id}});"><span>Follow</span></button>
-								</div>
-							{% endif %}
+						{% if user.is_authenticated %}
+							{% if user != followee %}
+								{% if followee in user.followees.all %}
+									<div class="unfollow-button">
+										<button  onclick="profile_unfollow({{followee.id}}, {{profile_user.id}});"><span>Following</span></button>
+									</div>
+								{% else %}
+									<div class="follow-button">
+										<button onclick="profile_follow({{followee.id}}, {{profile_user.id}});"><span>Follow</span></button>
+									</div>
+								{% endif %}
+							{% endif %}	
 						{% endif %}	
 					</div>
 				{% endfor %}
@@ -73,4 +78,9 @@
 </div>
 
 	{{ user.serialize|json_script:"user" }}
+{% endblock %}
+
+{% block script %}
+	<script src="{% static 'network/assets/js/main.js' %}"></script>
+
 {% endblock %}

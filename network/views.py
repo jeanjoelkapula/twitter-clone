@@ -14,10 +14,10 @@ from .models import *
 register = template.Library()
 
 def index(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
         post = request.POST['post']
         post = Post(user=request.user, post=post)
         post.save()
@@ -30,8 +30,6 @@ def index(request):
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
 def profile(request, user_id):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
 
     #check user id 
     try:
@@ -101,9 +99,6 @@ def user_following(request, user_id):
 
 
 def followers(request, user_id, following):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
-
     #check user id
     try:
         user = User.objects.get(pk=user_id)
@@ -123,6 +118,8 @@ def followers(request, user_id, following):
 
 
 def post(request, post_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "access denied"}, status=403)
 
     if request.method == "PUT":
         # Query for post
@@ -158,6 +155,36 @@ def post(request, post_id):
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+
+def post_edit(request, post_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "access denied"}, status=403)
+    
+    if request.method == "PUT":
+        #check post id
+        try:
+            post = Post.objects.get(pk=post_id)
+
+            data = json.loads(request.body)
+
+            if data.get('post') is not None:
+                post.post = data.get('post')
+                post.save()
+
+                return JsonResponse({"success": "the post has been updated"}, status=201)
+
+            else:
+                return JsonResponse({
+                    "error": "Post content was not found"
+                }, status=400)
+        except Post.DoesNotExist:
+            return JsonResponse({
+                "error": "Post not found"
+            }, status=400)
+    else:
+        return JsonResponse({
+                "error": "GET or PUT request required."
+            }, status=400)
 
 def follow(request, user_id):
     #check user id

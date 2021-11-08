@@ -60,39 +60,74 @@
                                     </div>    
                                 </a>
                             </li>
-                            <li class="menu-item">
-                                <a class="menu-link" class="menu-link-text">
-                                    <i class="fas fa-people-arrows"></i>
-                                </a>
-                                <a href="{% url 'following' %}" class="menu-link-text">
-                                    <div >
-                                        <span>Following</span>
-                                    </div>    
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a class="menu-link">
-                                    <i class="fas fa-user-circle"></i>
-                                </a>
-                                <a href="{% url 'profile' user.id %}" class="menu-link-text">
-                                    <div >
-                                        <span>Profile</span>
-                                    </div>    
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a class="menu-link" href="{% url 'logout' %}">
-                                    <i class="fas fa-arrow-circle-left"></i>
-                                </a>
-                                <a href="{% url 'logout' %}" class="menu-link-text">
-                                    <div >
-                                        <span>Logo out</span>
-                                    </div>
-                                </a>
-                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="menu-item">
+                                    <a class="menu-link" class="menu-link-text">
+                                        <i class="fas fa-people-arrows"></i>
+                                    </a>
+                                    <a href="{% url 'following' %}" class="menu-link-text">
+                                        <div >
+                                            <span>Following</span>
+                                        </div>    
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% if user.is_authenticated %}
+                                <li class="menu-item">
+                                    <a class="menu-link">
+                                        <i class="fas fa-user-circle"></i>
+                                    </a>
+                                    <a href="{% url 'profile' user.id %}" class="menu-link-text">
+                                        <div >
+                                            <span>Profile</span>
+                                        </div>    
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% if user.is_authenticated %}
+                                <li class="menu-item">
+                                    <a class="menu-link" href="{% url 'logout' %}">
+                                        <i class="fas fa-arrow-circle-left"></i>
+                                    </a>
+                                    <a href="{% url 'logout' %}" class="menu-link-text">
+                                        <div >
+                                            <span>Log out</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endif %}
+                           
             
+                            {% if not user.is_authenticated %}
+                                <li class="menu-item">
+                                    <a class="menu-link" href="{% url 'login' %}">
+                                        <i class="fas fa-arrow-circle-right"></i>
+                                    </a>
+                                    <a href="{% url 'login' %}" class="menu-link-text">
+                                        <div >
+                                            <span>Log in </span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if not user.is_authenticated %}
+                                <li class="menu-item">
+                                    <a class="menu-link" href="{% url 'register' %}">
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                    <a href="{% url 'register' %}" class="menu-link-text">
+                                        <div >
+                                            <span>Sign Up </span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endif %}
+
                             <li class="menu-item ">
-                                <a class="menu-link add-twit">
+                                <a class="menu-link add-twit" data-toggle="modal" data-target="#twit-modal">
                                     <i class="fas fa-feather-alt"></i>
                                 </a>
                             </li>
@@ -133,6 +168,10 @@
         <!--===============================================================================================-->
             <script src="{% static 'network/assets/vendor/countdowntime/countdowntime.js' %}"></script>
         <!--===============================================================================================-->
-        <script src="{% static 'network/assets/js/main.js' %}"></script>
+
+        {% block script %}
+
+        {% endblock %}
+        
     </body>
 </html>

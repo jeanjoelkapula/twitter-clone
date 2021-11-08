@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 {% load post_liked %}
 {% block body %}
 <div class="side-main"> 
@@ -69,21 +70,34 @@
 				<div class="post-content">
 					<div class="post-username">
 						<a href="{% url 'profile' post.user.id %}">{{post.user}}</a>
+						<span>{{post.date_created}}</span>
 					</div>
 					<div class="post-text">
-						<p>{{post.post}}</p>
+						<p id="post-content-{{post.id}}">{{post.post}}</p>
 					</div>
-					<div class="post-buttons">
-						<div class="post-button">
-							<a id="like-{{post.id}}" data-post="{{post.id}}" onclick="like_post(this)"><i class="far fa-heart {% if post|is_liked:user != None %} {% if post|is_liked:user %} post-like-active {% endif %}{% endif %}"></i></a>
-							<span id="likes-{{post.id}}">{{post.likes}}</span>
+					{% if user.is_authenticated %}
+						<div class="post-buttons">
+							<div class="post-button">
+								<a id="like-{{post.id}}" data-post="{{post.id}}" onclick="like_post(this)"><i class="far fa-heart {% if post|is_liked:user != None %} {% if post|is_liked:user %} post-like-active {% endif %}{% endif %}"></i></a>
+								<span id="likes-{{post.id}}">{{post.likes}}</span>
+							</div>
+							<div class="post-button">
+								<a id="dislike-{{post.id}}" data-post="{{post.id}}" onclick="dislike_post(this)"><i class="fas fa-heart-broken {% if post|is_liked:user != None %} {% if post|is_liked:user == False %} post-like-active {% endif %}{% endif %}"></i></a>
+								<span id="dislikes-{{post.id}}">{{post.dislikes}}</span>
+							</div>
 						</div>
-						<div class="post-button">
-							<a id="dislike-{{post.id}}" data-post="{{post.id}}" onclick="dislike_post(this)"><i class="fas fa-heart-broken {% if post|is_liked:user != None %} {% if post|is_liked:user == False %} post-like-active {% endif %}{% endif %}"></i></a>
-							<span id="dislikes-{{post.id}}">{{post.dislikes}}</span>
-						</div>
-					</div>
+					{% endif %}
 				</div>
+				{% if user.is_authenticated %}
+					{% if user == post.user %}
+						<div class="post-edit-button">
+							<button data-toggle="modal" data-target="#twit-modal-edit" onclick="open_edit_post({{post.serialize}});">
+								<i class="far fa-edit"></i>
+							</button>
+						</div>
+					{% endif %}
+
+				{% endif %}
 			</div>
 		{% empty %}
 			<div style="display: flex; height: 100%; justify-content: center; align-items: center;">
@@ -91,8 +105,6 @@
 			</div>
 		{% endfor %}
 
-
-		
 	</div>
 	<div id="twit-modal" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
 		<div class="modal-dialog" role="document" style="min-width: 590px;">
@@ -123,6 +135,41 @@
 		  </div>
 		</div>
 	</div>
+
+	<div id="twit-modal-edit" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
+		<div class="modal-dialog" role="document" style="min-width: 590px;">
+			  <div class="modal-content" style="background: black; border-radius: 15px;">
+				<div class="modal-header" style="border-bottom: 1px solid #ffffff6e;">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" >
+					<form action="{% url 'index' %}" method="POST">
+						{% csrf_token %}
+						<div class="">
+							<div class="write-twit">
+								<div class="">
+									<i class="fas fa-user-circle"></i>
+								</div>
+								<textarea name="post" id="edit-post" cols="30" rows="3" placeholder="what's happening?"></textarea>	
+							</div>
+						<div style="display: flex; justify-content: right; ">
+							<button id="edit-post-button" onclick="edit_post(this);" type="button" class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
+								Save Post
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		  </div>
+		</div>
+	</div>
 </div>
+{{ user.serialize|json_script:"user" }}
+{% endblock %}
+
+{% block script %}
+	<script src="{% static 'network/assets/js/main.js' %}"></script>
 
 {% endblock %}

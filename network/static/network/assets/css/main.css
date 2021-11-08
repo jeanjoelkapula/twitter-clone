@@ -860,12 +860,20 @@ i + span{
 
 .post-username a {
   color: white;
+  font-size: 17px;
+}
+
+.post-username span {
+  font-size: 13px;
+  color: #aaa7a7;
+  margin-left: 15px;
 }
 
 .post-content {
   padding-top: 15px;
   padding-right: 10px;
   color: white;
+  width: 88%;
 }
 
 .post-text p{
@@ -905,6 +913,25 @@ i + span{
 
 .post-buttons .post-button span {
   color:  #fff6;
+}
+
+.post-edit-button {
+  display: flex;
+  padding-top: 20px;
+  padding-right: 10px;
+}
+
+.post-edit-button button {
+  height: 20px;
+}
+
+.post-edit-button button i {
+  font-size: 20px;
+  color:  #fff6;
+}
+
+.post-edit-button button i:hover {
+    color: white;
 }
 
 .profile-top {

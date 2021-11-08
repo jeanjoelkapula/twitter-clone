@@ -39,6 +39,11 @@ class Post(models.Model):
             return count
         else:
             return ""
+    def serialize(self):
+        return {
+            "id": self.id,
+            "post": self.post,
+        }
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, null=False, on_delete = models.CASCADE)
