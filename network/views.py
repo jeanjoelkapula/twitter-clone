@@ -150,7 +150,8 @@ def post(request, post_id):
                     dislikes = len(PostLike.objects.filter(post=post, is_like=False))
 
                     return JsonResponse({"success": "the post has been updated", "likes":likes, "dislikes": dislikes}, status=201)
-
+                else:
+                    return JsonResponse({"error": "invalid unliked value."}, status=404)
 
         except PostLike.DoesNotExist:
             post_like = PostLike(user=request.user, post=post, is_like=data["liked"])
