@@ -24,7 +24,7 @@
 						</div>
 						<div class="follow-username">
 							<div class="post-username">
-								<span>{{follower}}</span>
+								<span><a href="{% url 'profile' follower.id %}">{{follower}}</a></span>
 							</div>
 						</div>
 						{% if user.is_authenticated %}
@@ -52,7 +52,7 @@
 						</div>
 						<div class="follow-username">
 							<div class="post-username">
-								<span>{{followee}}</span>
+								<span><a href="{% url 'profile' followee.id %}">{{followee}}</a></span>
 							</div>
 						</div>
 						{% if user.is_authenticated %}

@@ -213,7 +213,7 @@ function load_following (id) {
                 </div>
                 <div class="follow-username">
                     <div class="post-username">
-                        <span>${follower.username}}</span>
+                        <span><a href='/profile/${follower.id}'>${follower.username}</a></span>
                     </div>
                 </div>
             `;
@@ -260,7 +260,7 @@ function load_following (id) {
                 </div>
                 <div class="follow-username">
                     <div class="post-username">
-                        <span>${followee.username}</span>
+                    <span><a href='/profile/${followee.id}'>${followee.username}</a></span>
                     </div>
                 </div>
             `;

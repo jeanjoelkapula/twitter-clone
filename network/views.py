@@ -165,6 +165,10 @@ def post_edit(request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
 
+            #check if request user is the creator of the post
+            if request.user != post.user:
+                return JsonResponse({"error": "access denied. You are not allowed to edit the content of this post"}, status=403)
+
             data = json.loads(request.body)
 
             if data.get('post') is not None:
