@@ -20,14 +20,29 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 function like_post(button) {
+    unliked = false;
+
+    if (!document.querySelector(`#like-${button.dataset.post}`).childNodes[0].classList.contains('post-like-active')){
+        json_data = JSON.stringify({
+            liked: 'True'
+        });
+
+        
+    }
+    else {
+        json_data = JSON.stringify({
+            unliked: 'True'
+        });
+
+        unliked = true;
+    }
+
     const request = new Request(
         `/post/${button.dataset.post}`,
         {headers: {'X-CSRFToken': csrftoken}}
     );
 
-    json_data = JSON.stringify({
-        liked: 'True'
-    })
+    
 
     fetch(request, {
         method: 'PUT',
@@ -37,7 +52,13 @@ function like_post(button) {
     .then(response => response.json())
 	.then(data => {
         
-        $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        if (unliked) {
+            $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
+        }
+        else {
+            $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        }
+        
         $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
         
         if (data.likes > 0) {
@@ -60,14 +81,26 @@ function like_post(button) {
 }
 
 function dislike_post(button) {
+    unliked = false;
+
+    if (!document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0].classList.contains('post-like-active')){
+        json_data = JSON.stringify({
+            liked: 'False'
+        });
+        
+    }
+    else {
+        json_data = JSON.stringify({
+            unliked: 'True'
+        });
+
+        unliked = true;
+    }
+
     const request = new Request(
         `/post/${button.dataset.post}`,
         {headers: {'X-CSRFToken': csrftoken}}
     );
-
-    json_data = JSON.stringify({
-        liked: 'False'
-    })
 
     fetch(request, {
         method: 'PUT',
@@ -77,7 +110,14 @@ function dislike_post(button) {
     .then(response => response.json())
 	.then(data => {
   
-        $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        if (unliked) {
+            $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
+        }
+        else {
+            $(document.querySelector(`#dislike-${button.dataset.post}`).childNodes[0]).addClass("post-like-active");
+        }
+
+        
         $(document.querySelector(`#like-${button.dataset.post}`).childNodes[0]).removeClass("post-like-active");
   
         if (data.likes > 0) {

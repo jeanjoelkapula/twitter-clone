@@ -141,6 +141,17 @@ def post(request, post_id):
                 dislikes = len(PostLike.objects.filter(post=post, is_like=False))
 
                 return JsonResponse({"success": "the post has been updated", "likes":likes, "dislikes": dislikes}, status=201)
+
+            if data.get('unliked') is not None:
+                if data['unliked'] == 'True':
+                    post_like.delete()
+
+                    likes = len(PostLike.objects.filter(post=post, is_like=True))
+                    dislikes = len(PostLike.objects.filter(post=post, is_like=False))
+
+                    return JsonResponse({"success": "the post has been updated", "likes":likes, "dislikes": dislikes}, status=201)
+
+
         except PostLike.DoesNotExist:
             post_like = PostLike(user=request.user, post=post, is_like=data["liked"])
             post_like.save()
