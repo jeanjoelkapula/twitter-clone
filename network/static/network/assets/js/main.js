@@ -420,3 +420,7 @@ function edit_post(button) {
         console.error( error);
     });
 }
+
+function set_url(path) {
+    window.history.pushState("", "following", path);
+}

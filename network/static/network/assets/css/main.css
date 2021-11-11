@@ -427,10 +427,10 @@ iframe {
   border-radius: 25px;
 
   background: #9152f8;
-  background: -webkit-linear-gradient(bottom, #b9b9b9, #6b6868);
-  background: -o-linear-gradient(bottom, #b9b9b9, #6b6868);
-  background: -moz-linear-gradient(bottom, #b9b9b9, #6b6868);
-  background: linear-gradient(bottom, #b9b9b9, #6b6868);
+  background: -webkit-linear-gradient(bottom, #808080, #6b6868);
+  background: -o-linear-gradient(bottom, #808080, #6b6868);
+  background: -moz-linear-gradient(bottom, #808080, #6b6868);
+  background: linear-gradient(bottom, #808080, #6b6868);
   
   position: relative;
   z-index: 1;
@@ -680,13 +680,13 @@ i + span{
 .add-twit-button, .unfollow-button button, .follow-button button{
   height: 55px;
   width: 160px;
-  background-color: #b9b9b9;
+  background-color: #808080;
   border-radius: 55px;;
   color: white;
 }
 
 .add-twit {
-  background-color: #b9b9b9;
+  background-color: #808080;
   margin-top: 20px;
   display: none !important;;
 }
@@ -695,7 +695,7 @@ i + span{
   color: #fff !important;
 }
 .add-twit:hover {
-  background-color: #b9b9b9 !important;
+  background-color: #808080 !important;
 }
 
 .side-main {
@@ -775,7 +775,7 @@ i + span{
 }
 
 @media (max-width: 992px) {
-  .add-twit-button {
+  #menu-twit-button {
     display: none;
   }
   
@@ -792,7 +792,7 @@ i + span{
   }
 
   .menu .menu-item .menu-link:hover {
-    background-color: #b9b9b9
+    background-color: #808080
   }
 
   .menu .menu-item .menu-link:hover i {

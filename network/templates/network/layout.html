@@ -62,7 +62,7 @@
                             </li>
                             {% if user.is_authenticated %}
                                 <li class="menu-item">
-                                    <a class="menu-link" class="menu-link-text">
+                                    <a class="menu-link" href="{% url 'following' %}" class="menu-link-text">
                                         <i class="fas fa-people-arrows"></i>
                                     </a>
                                     <a href="{% url 'following' %}" class="menu-link-text">
@@ -75,7 +75,7 @@
                             
                             {% if user.is_authenticated %}
                                 <li class="menu-item">
-                                    <a class="menu-link">
+                                    <a class="menu-link" href="{% url 'profile' user.id %}">
                                         <i class="fas fa-user-circle"></i>
                                     </a>
                                     <a href="{% url 'profile' user.id %}" class="menu-link-text">
@@ -132,7 +132,7 @@
                                 </a>
                             </li>
                             <li class="menu-item ">
-                                <button class="add-twit-button" data-toggle="modal" data-target="#twit-modal">
+                                <button id="menu-twit-button" class="add-twit-button" data-toggle="modal" data-target="#twit-modal">
                                     New Post
                                 </button>
                             </li>

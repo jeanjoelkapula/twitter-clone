@@ -152,6 +152,36 @@
 	  </div>
 	</div>
 </div>
+
+<div id="twit-modal" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
+	<div class="modal-dialog" role="document" style="min-width: 590px;">
+		  <div class="modal-content" style="background: black; border-radius: 15px;">
+			<div class="modal-header" style="border-bottom: 1px solid #ffffff6e;">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" >
+				<form action="{% url 'index' %}" method="POST">
+					{% csrf_token %}
+					<div class="">
+						<div class="write-twit">
+							<div class="">
+								<i class="fas fa-user-circle"></i>
+							</div>
+							<textarea name="post" id="post" cols="30" rows="3" placeholder="what's happening?"></textarea>	
+						</div>
+					<div style="display: flex; justify-content: right; ">
+						<button class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
+							New Post
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	  </div>
+	</div>
+</div>
 </div>
 	{{ user.serialize|json_script:"user" }}
 {% endblock %}
