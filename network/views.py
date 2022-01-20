@@ -11,13 +11,11 @@ from django.core.paginator import Paginator
 from django import template
 from .models import *
 
-register = template.Library()
-
 def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
 
     if request.method == "POST":
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
         post = request.POST['post']
         post = Post(user=request.user, post=post)
         post.save()
@@ -30,6 +28,8 @@ def index(request):
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
 def profile(request, user_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
 
     #check user id 
     try:
@@ -79,6 +79,9 @@ def following(request):
     return render(request, "network/index.html", {"page": page, "header":"Following Posts"})
 
 def user_following(request, user_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
     #check user id
     try:
         user = User.objects.get(pk=user_id)
@@ -99,6 +102,9 @@ def user_following(request, user_id):
 
 
 def followers(request, user_id, following):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
     #check user id
     try:
         user = User.objects.get(pk=user_id)
@@ -111,7 +117,6 @@ def followers(request, user_id, following):
             "profile_user": user
         }
 
-        print(user.followers.first())
         return render(request, "network/following.html", context)
     else:
          return Http404()
@@ -203,15 +208,16 @@ def post_edit(request, post_id):
             }, status=400)
 
 def follow(request, user_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
     #check user id
     try:
         user = User.objects.get(pk=user_id)
     except User.DoesNotExist:
         return JsonResponse({"error": "user not found."}, status=404)
 
-    print(f"USER ID: {user.id} REQUEST ID: {request.user.id}")
     data = json.loads(request.body)
-    print(data)
 
     #update user following
     if user != request.user and data.get('is_follow') is not None:
@@ -228,6 +234,7 @@ def follow(request, user_id):
         return JsonResponse({"success": "User follow successfully updated", "followers":followers, "followees": followees}, status=201)
     else:
         return JsonResponse({"error": "User follow successfully updated"}, status=403)
+        
 def login_view(request):
     if request.method == "POST":
 
