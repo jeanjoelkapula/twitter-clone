@@ -391,6 +391,13 @@ function open_edit_post(post) {
     document.querySelector('#edit-post-button').dataset.id = post.id;
 }
 
+function open_post(element) {
+    textarea = document.querySelector('#edit-post');
+    textarea.value = element.dataset.content;
+
+    document.querySelector('#edit-post-button').dataset.id = element.dataset.post;
+}
+
 function edit_post(button) {
     post_id = button.dataset.id;
     post = document.querySelector('#edit-post').value;
@@ -414,6 +421,7 @@ function edit_post(button) {
         if (data.success) {
             document.querySelector(`#post-content-${post_id}`).innerHTML = post;
             $("#twit-modal-edit").modal('hide');
+            console.log('success');
         }
 	})
     .catch(error => {

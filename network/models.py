@@ -18,7 +18,7 @@ class User(AbstractUser):
 
 class Post(models.Model):
     user = models.ForeignKey(User, null=False, on_delete = models.CASCADE)
-    date_created = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     post = models.CharField(max_length=255,null=False, default="")
 
     def __str__(self):
@@ -42,7 +42,12 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "post": self.post,
+            "post": str(self.post),
+            "user": self.user.username,
+            "user_id": self.user.id,
+            "likes": self.likes(),
+            "dislikes": self.dislikes(),
+            "date_created": self.date_created.strftime("%b.%d.%Y, %H:%M %p")
         }
 
 class PostLike(models.Model):

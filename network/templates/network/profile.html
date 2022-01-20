@@ -39,45 +39,6 @@
 			</div>
 		</div>
   	</div>
-	  <div class="pagination-container">
-		<nav aria-label="Page navigation example">
-			<ul class="pagination">
-				{% if page.has_previous %}
-					<li class="page-item" >
-						<a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-							<span class="sr-only">Previous</span>
-						</a>
-					</li>
-				{% else %}
-					<li class="page-item disabled" >
-						<a class="page-link" href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-							<span class="sr-only">Previous</span>
-						</a>
-					</li>
-				{% endif %}
-			  
-				<li class="page-item" style="padding-top: 5px;">Page {{ page.number }} of {{page.paginator.num_pages }}</li>					
-			{% if page.has_next %}
-				<li class="page-item">
-					<a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-						<span class="sr-only">Next</span>
-					</a>
-				</li>
-			{% else %}
-				<li class="page-item disabled">
-					<a class="page-link" href="#" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-						<span class="sr-only">Next</span>
-					</a>
-				</li>
-			{% endif %}
-					
-			</ul>
-		  </nav>
-	</div>
 	<div class="post-container disable-scrollbars" style="height: 500px;">
 		{% for post in page.object_list %}
 			<div class="post">
@@ -87,7 +48,7 @@
 				<div class="post-content">
 					<div class="post-username">
 						<a>{{post.user}}</a>
-						<span>{{post.date_created}}</span>
+						<span>{{post.date_created | date:'M.d.Y, H:i A'}}</span>
 					</div>
 					<div class="post-text">
 						<p id="post-content-{{post.id}}">{{post.post}}</p>
@@ -109,7 +70,7 @@
 				{% if user.is_authenticated %}
 				{% if user == post.user %}
 					<div class="post-edit-button">
-						<button data-toggle="modal" data-target="#twit-modal-edit" onclick="open_edit_post({{post.serialize}});">
+						<button data-toggle="modal" data-target="#twit-modal-edit" data-post="${post.id}" data-content="${post.post}" onclick="open_post(this);">
 							<i class="far fa-edit"></i>
 						</button>
 					</div>
@@ -187,6 +148,9 @@
 {% endblock %}
 
 {% block script %}
+    <script>
+        var page = 1;
+    </script>
 	<script src="{% static 'network/assets/js/main.js' %}"></script>
-
+    <script src="{% static 'network/assets/js/profile.js' %}"></script>
 {% endblock %}

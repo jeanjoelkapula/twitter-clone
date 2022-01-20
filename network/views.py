@@ -7,8 +7,7 @@ from django.http.response import Http404
 from django.shortcuts import render
 from django.template import library
 from django.urls import reverse
-from django.core.paginator import Paginator
-from django import template
+from django.core.paginator import Paginator, EmptyPage
 from .models import *
 
 def index(request):
@@ -21,9 +20,8 @@ def index(request):
         post.save()
         return HttpResponseRedirect(reverse('index'))
     
-    page = request.GET.get('page', 1)
     posts = Post.objects.order_by('-date_created').all()
-    page = Paginator(posts, 10).page(page)
+    page = Paginator(posts, 10).page(1)
 
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
@@ -100,6 +98,82 @@ def user_following(request, user_id):
             "error": "GET or PUT request required."
         }, status=400)
 
+def get_page_posts(request, page):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "error": "Access denied."
+        }, status=403)
+    
+    posts = Post.objects.order_by('-date_created').all()
+    
+    try:
+        paginator = Paginator(posts, 10)
+        page_posts = paginator.page(page).object_list
+        data = []
+
+        for post in page_posts:
+            p = post.serialize()
+            liked = None
+            try:
+                post_like = post.post_likes.get(user=request.user, post=post)
+                liked = post_like.is_like
+            except PostLike.DoesNotExist:
+                liked = None
+            p['liked'] = liked
+            data.append(p)
+
+        page
+        context = {
+            'posts': data,
+            'num_pages': paginator.num_pages,
+            'success': 'done'
+        }
+
+        return JsonResponse(context,status=200)
+        
+    except EmptyPage:
+        return JsonResponse({
+            "error": "That page contains no results."
+        }, status=200)
+
+def get_profile_posts(request, user_id, page):
+    try:
+        user = User.objects.get(pk=user_id)
+        posts = Post.objects.filter(user=user).order_by('-date_created').all()
+
+        try:
+            paginator = Paginator(posts, 10)
+            page_posts = paginator.page(page).object_list
+            data = []
+
+            for post in page_posts:
+                p = post.serialize()
+                liked = None
+                try:
+                    post_like = post.post_likes.get(user=request.user, post=post)
+                    liked = post_like.is_like
+                except PostLike.DoesNotExist:
+                    liked = None
+                p['liked'] = liked
+                data.append(p)
+
+            page
+            context = {
+                'posts': data,
+                'num_pages': paginator.num_pages,
+                'success': 'done'
+            }
+
+            return JsonResponse(context,status=200)
+            
+        except EmptyPage:
+            return JsonResponse({
+                "error": "That page contains no results."
+            }, status=200)
+    except User.DoesNotExist:
+        return JsonResponse({
+            "error": "The profile requested does not exist."
+        }, status=200)
 
 def followers(request, user_id, following):
     if not request.user.is_authenticated:
@@ -234,7 +308,7 @@ def follow(request, user_id):
         return JsonResponse({"success": "User follow successfully updated", "followers":followers, "followees": followees}, status=201)
     else:
         return JsonResponse({"error": "User follow successfully updated"}, status=403)
-        
+
 def login_view(request):
     if request.method == "POST":
 
