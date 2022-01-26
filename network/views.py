@@ -25,6 +25,15 @@ def index(request):
 
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
+def chat(request):
+    return render(request, "network/chat.html")
+
+
+def room(request, room_name):
+    return render(request, 'network/room.html', {
+        'room_name': room_name
+    })
+
 def profile(request, user_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))

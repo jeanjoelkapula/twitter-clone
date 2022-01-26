@@ -16,5 +16,7 @@ urlpatterns = [
     path("user_following/<int:user_id>", views.user_following, name="user_following"),
     path('post/<int:post_id>/edit', views.post_edit, name="post_edit"),
     path('posts/<int:page>', views.get_page_posts, name="posts"),
-    path('profile/<int:user_id>/posts/<int:page>', views.get_profile_posts, name="profile_posts")
+    path('profile/<int:user_id>/posts/<int:page>', views.get_profile_posts, name="profile_posts"),
+    path('chat', views.chat, name="chat"),
+    path('<str:room_name>/', views.room, name='room'),
 ]
