@@ -57,3 +57,21 @@ class PostLike(models.Model):
 
     def __str__(self):
         return f"Post - {self.post.id} - {self.user} - {self.is_like}"
+
+class ChatMessage(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="messages")
+    sender = models.ForeignKey("User", on_delete=models.PROTECT, related_name="messages_sent")
+    recipient = models.ForeignKey("User", on_delete=models.PROTECT, related_name="messages_received")
+    message = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "sender": self.sender.username,
+            "recipient": self.recipient.username,
+            "message": self.message,
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "read": self.read,
+        }
