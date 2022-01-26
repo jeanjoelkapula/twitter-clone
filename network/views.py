@@ -74,7 +74,6 @@ def profile(request, user_id):
         return render(request, "network/profile_not_found.html")
     
 
-
 def following(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
@@ -84,6 +83,9 @@ def following(request):
     page = Paginator(posts, 10).page(page)
 
     return render(request, "network/index.html", {"page": page, "header":"Following Posts"})
+
+def messages(request):
+    return render(request, "network/messages.html")
 
 def user_following(request, user_id):
     if not request.user.is_authenticated:

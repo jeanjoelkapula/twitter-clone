@@ -35,6 +35,10 @@
             <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/util.css' %}">
             <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/main.css' %}">
         <!--===============================================================================================-->
+
+        {% block stylesheet %}
+
+        {% endblock %}
     </head>
     <body>
 
@@ -60,71 +64,48 @@
                                     </div>    
                                 </a>
                             </li>
-                            {% if user.is_authenticated %}
-                                <li class="menu-item">
-                                    <a class="menu-link" href="{% url 'following' %}" class="menu-link-text">
-                                        <i class="fas fa-people-arrows"></i>
-                                    </a>
-                                    <a href="{% url 'following' %}" class="menu-link-text">
-                                        <div >
-                                            <span>Following</span>
-                                        </div>    
-                                    </a>
-                                </li>
-                            {% endif %}
-                            
-                            {% if user.is_authenticated %}
-                                <li class="menu-item">
-                                    <a class="menu-link" href="{% url 'profile' user.id %}">
-                                        <i class="fas fa-user-circle"></i>
-                                    </a>
-                                    <a href="{% url 'profile' user.id %}" class="menu-link-text">
-                                        <div >
-                                            <span>Profile</span>
-                                        </div>    
-                                    </a>
-                                </li>
-                            {% endif %}
-                            
-                            {% if user.is_authenticated %}
-                                <li class="menu-item">
-                                    <a class="menu-link" href="{% url 'logout' %}">
-                                        <i class="fas fa-arrow-circle-left"></i>
-                                    </a>
-                                    <a href="{% url 'logout' %}" class="menu-link-text">
-                                        <div >
-                                            <span>Log out</span>
-                                        </div>
-                                    </a>
-                                </li>
-                            {% endif %}
-                           
-            
-                            {% if not user.is_authenticated %}
-                                <li class="menu-item">
-                                    <a class="menu-link" href="{% url 'login' %}">
-                                        <i class="fas fa-arrow-circle-right"></i>
-                                    </a>
-                                    <a href="{% url 'login' %}" class="menu-link-text">
-                                        <div >
-                                            <span>Log in </span>
-                                        </div>
-                                    </a>
-                                </li>
-                            {% endif %}
 
-                            {% if not user.is_authenticated %}
-                                <li class="menu-item">
-                                    <a class="menu-link" href="{% url 'register' %}">
-                                        <i class="fas fa-user-plus"></i>
-                                    </a>
-                                    <a href="{% url 'register' %}" class="menu-link-text">
-                                        <div >
-                                            <span>Sign Up </span>
-                                        </div>
-                                    </a>
-                                </li>
-                            {% endif %}
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'following' %}" class="menu-link-text">
+                                    <i class="fas fa-people-arrows"></i>
+                                </a>
+                                <a href="{% url 'following' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Following</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'messages' %}">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a href="{% url 'messages' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Messages</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'profile' user.id %}">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a href="{% url 'profile' user.id %}" class="menu-link-text">
+                                    <div >
+                                        <span>Profile</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'logout' %}">
+                                    <i class="fas fa-arrow-circle-left"></i>
+                                </a>
+                                <a href="{% url 'logout' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Log out</span>
+                                    </div>
+                                </a>
+                            </li>
 
                             <li class="menu-item ">
                                 <a class="menu-link add-twit" data-toggle="modal" data-target="#twit-modal">
