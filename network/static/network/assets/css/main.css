@@ -1087,3 +1087,12 @@ i + span{
   width: 95px;
   font-size: 15px;
 }
+
+.scrollDiv {
+    max-height: 100vh !important;
+    overflow: auto;
+}
+
+.chat-wrapper {
+    width: 80%;
+}

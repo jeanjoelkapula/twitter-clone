@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+        
+
+        
+        <script src="https://use.fontawesome.com/05d3283420.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+
+        <link rel="stylesheet" href="{% static 'network/assets/vendor/fonts/ionicons.css' %}">
+        <link rel="stylesheet" href="{% static 'network/assets/vendor/fonts/linearicons.css' %}">
+        <link rel="stylesheet" href="{% static 'network/assets/vendor/fonts/open-iconic.css' %}">
+        <link rel="stylesheet" href="{% static 'network/assets/vendor/fonts/pe-icon-7-stroke.css' %}">
+      
+
+
+        <!--===============================================================================================-->	
+        <link rel="icon" type="image/png" href="{% static 'network/assets/images/icons/favicon.ico' %}"/>
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+        <!--===============================================================================================-->
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/animate/animate.css' %}">
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/vendor/animsition/css/animsition.min.css' %}">
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/util.css' %}">
+            <link rel="stylesheet" type="text/css" href="{% static 'network/assets/css/main.css' %}">
+        <!--===============================================================================================-->
+
+
+
+        {% block stylesheet %}
+
+        {% endblock %}
+    </head>
+    <body>
+
+        
+        <div class="" style="height: 100%;">
+            <div class="wrapper">
+                <div class="twitter-wrap">
+                    <div class="side-left">
+                        <ul class="menu">
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    <i class="zmdi zmdi-landscape"></i>
+                                </a>
+                            </li>
+            
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'index' %}">
+                                    <i class="fas fa-home"></i>
+                                </a>
+                                <a href="{% url 'index' %}" class="menu-link-text">
+                                    <div>
+                                        <span>All Posts</span>
+                                    </div>    
+                                </a>
+                            </li>
+
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'following' %}" class="menu-link-text">
+                                    <i class="fas fa-people-arrows"></i>
+                                </a>
+                                <a href="{% url 'following' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Following</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'messages' %}">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a href="{% url 'messages' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Messages</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'profile' user.id %}">
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <a href="{% url 'profile' user.id %}" class="menu-link-text">
+                                    <div >
+                                        <span>Profile</span>
+                                    </div>    
+                                </a>
+                            </li>
+                            
+                            <li class="menu-item">
+                                <a class="menu-link" href="{% url 'logout' %}">
+                                    <i class="fas fa-arrow-circle-left"></i>
+                                </a>
+                                <a href="{% url 'logout' %}" class="menu-link-text">
+                                    <div >
+                                        <span>Log out</span>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <li class="menu-item ">
+                                <a class="menu-link add-twit" data-toggle="modal" data-target="#twit-modal">
+                                    <i class="fas fa-feather-alt"></i>
+                                </a>
+                            </li>
+                            <li class="menu-item ">
+                                <button id="menu-twit-button" class="add-twit-button" data-toggle="modal" data-target="#twit-modal">
+                                    New Post
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            
+                {% block body %}
+
+                 {% endblock %}
+            </div>
+            
+
+        </div>
+
+        
+        <!--===============================================================================================-->
+        <script src="{% static 'network/assets/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+        <!--===============================================================================================-->
+            <script src="{% static 'network/assets/vendor/animsition/js/animsition.min.js' %}"></script>
+        <!--===============================================================================================-->
+            <script src="{% static 'network/assets/vendor/bootstrap/js/popper.js' %}"></script>
+            <script src="{% static 'network/assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+        <!--===============================================================================================-->
+            <script src="{% static 'network/assets/vendor/select2/select2.min.js' %}"></script>
+        <!--===============================================================================================-->
+            <script src="{% static 'network/assets/vendor/daterangepicker/moment.min.js' %}"></script>
+            <script src="{% static 'network/assets/vendor/daterangepicker/daterangepicker.js' %}"></script>
+        <!--===============================================================================================-->
+            <script src="{% static 'network/assets/vendor/countdowntime/countdowntime.js' %}"></script>
+        <!--===============================================================================================-->
+
+        {% block script %}
+
+        {% endblock %}
+        
+    </body>
+</html>
