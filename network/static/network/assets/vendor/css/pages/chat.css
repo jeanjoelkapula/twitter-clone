@@ -82,6 +82,9 @@
 .chat-contacts .list-group-item.online{
     opacity:1
 }
+.chat-contacts .list-group-item:not(.active):hover {
+    color: white;
+}
 .chat-contacts .list-group-item .chat-status{
     font-weight:normal !important
 }
@@ -198,6 +201,7 @@
 }
 .chat-item {
     background: rgba(181, 181, 181, 0.15) !important;
+    font-size: 15px;
 }
 .chat-sidebox{
     background:#fff;
@@ -273,3 +277,15 @@
     }
 }
  
+.unselected-chat-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.unselected-chat-container.header {
+    font-size: 40px;
+}

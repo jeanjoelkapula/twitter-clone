@@ -19,5 +19,7 @@ urlpatterns = [
     path('profile/<int:user_id>/posts/<int:page>', views.get_profile_posts, name="profile_posts"),
     path('chat', views.chat, name="chat"),
     path('<str:room_name>/', views.room, name='room'),
-    path('messages', views.messages, name="messages")
+    path('messages', views.messages, name="messages"),
+    path('messages/<int:chat_id>', views.chat_messages, name="chat_messages"),
+    path('chat/<int:chat_id>/messages', views.json_chat_messages, name="json_chat_messages")
 ]

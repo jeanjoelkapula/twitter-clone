@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -58,13 +59,29 @@ class PostLike(models.Model):
     def __str__(self):
         return f"Post - {self.post.id} - {self.user} - {self.is_like}"
 
+class Chat(models.Model):
+    participants = models.ManyToManyField(User, blank=False, related_name="chats")
+    last_activity = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chat - {self.id}"
+    
+    def serialize(self, user):
+        return {
+            'id': self.id,
+            'last_activity': self.last_activity.strftime("%b %d %Y, %I:%M %p"),
+            'participants': [{'id': participant.id, 'username': participant.username} for participant in self.participants.all()],
+            'messages': [message.serialize() for message in self.chat_messages.filter(user=user).all()]
+        }
+
 class ChatMessage(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="messages")
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user_messages")
     sender = models.ForeignKey("User", on_delete=models.PROTECT, related_name="messages_sent")
     recipient = models.ForeignKey("User", on_delete=models.PROTECT, related_name="messages_received")
     message = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="chat_messages", null=False)
 
     def serialize(self):
         return {
@@ -75,3 +92,6 @@ class ChatMessage(models.Model):
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "read": self.read,
         }
+    
+    def __str__(self):
+        return f"{self.chat} {self.user.username}"

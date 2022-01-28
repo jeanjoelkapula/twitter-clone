@@ -1,4 +1,5 @@
 import json
+from select import select
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -31,7 +32,7 @@ def chat(request):
 
 def room(request, room_name):
     return render(request, 'network/room.html', {
-        'room_name': room_name
+        'room_name': request.user.id
     })
 
 def profile(request, user_id):
@@ -85,7 +86,51 @@ def following(request):
     return render(request, "network/index.html", {"page": page, "header":"Following Posts"})
 
 def messages(request):
-    return render(request, "network/messages.html")
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+    
+    selected_chat = None
+    chats = Chat.objects.filter(participants=request.user).order_by('last_activity').all()
+    context = {
+        'chats': chats,
+        'selected_chat': selected_chat
+    }
+    return render(request, "network/messages.html", context)
+
+def chat_messages(request, chat_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+
+    try:
+        chat = Chat.objects.get(pk=chat_id)
+
+        chats = Chat.objects.filter(participants=request.user).order_by('last_activity').all()
+        context = {
+            'chats': chats,
+            'selected_chat': chat
+        }
+
+        return render(request, "network/messages.html", context)
+    except Chat.DoesNotExist:
+        raise Http404("Chat does not exist")
+def json_chat_messages(request, chat_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "error": "Access denied."
+        }, status=403)
+    try:
+        chat = Chat.objects.get(pk=chat_id)
+    except Chat.DoesNotExist:
+        return JsonResponse({
+            "error": "The chat does not exist"
+        }, status=201)
+
+    if request.method == "GET":
+        context = {
+            'chat': chat.serialize(request.user)
+        }
+
+        return JsonResponse(context, status=201)
 
 def user_following(request, user_id):
     if not request.user.is_authenticated:

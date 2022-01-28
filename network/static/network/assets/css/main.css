@@ -983,6 +983,21 @@ i + span{
   margin-right: 13px;
 }
 
+.profile-message-button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.profile-message-button i {
+    font-size: 20px;
+}
+
 @media (max-width: 1355px) {
   .side-right {
     width: 15%;

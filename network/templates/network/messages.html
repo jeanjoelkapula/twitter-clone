@@ -2,10 +2,11 @@
 
 {% extends "network/layout2.html" %}
 {% load static %}
+{% load inbox_messages %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'network/assets/vendor/css/pages/chat.css' %}">
-<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/uikit.css' %}">
-<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/appwork.css' %}">
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/pages/chat.css' %}">
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/uikit.css' %}">
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/appwork.css' %}">
 {% endblock %}
 {% block body %}
 <div class="layout-content scrollDiv" style="width: 80%;">
@@ -31,271 +32,115 @@
 						<!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
 						<div class="flex-grow-1 position-relative">
 							<div class="chat-contacts list-group disable-scrollbars py-3 ps">
-								<!-- Online -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action ">
-									<i class="fas fa-user-circle"></i>
-									<div class="media-body ml-3">
-										Leon Wilson
-									</div>
-									<div class="badge chat-badge">5</div>
-								</a>
-								<!-- Online -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action ">
-									<i class="fas fa-user-circle"></i>
-									<div class="media-body ml-3">
-										Allie Rodriguez
-										
-									</div>
-								</a>
-								<!-- Online & Active -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action  active">
-									<i class="fas fa-user-circle"></i>
-									<div class="media-body ml-3">
-										Kenneth Frazier
-										
-									</div>
-								</a>
-								<!-- Online -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action ">
-									<i class="fas fa-user-circle"></i>
-									<div class="media-body ml-3">
-										Nellie Maxwell
-										
-									</div>
-									<div class="badge chat-badge">2</div>
-								</a>
-								<!-- Online -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action ">
-									<i class="fas fa-user-circle"></i>
-									<div class="media-body ml-3">
-										Mae Gibson
-										
-									</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Alice Hampton
-										
-									</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Hallie Lewis
-										
-									</div>
-									<div class="badge chat-badge">1</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Amanda Warner
-										
-									</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Wayne Morgan
-										
-									</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Belle Ross
-										
-									</div>
-								</a>
-								<!-- Offline -->
-								<a href="javascript:void(0)" class="list-group-item list-group-item-action">
-									<i class="fas fa-user-circle"></i>&nbsp;
-									<div class="media-body ml-3">
-										Arthur Duncan
-										
-									</div>
-								</a>
-								<div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-									<div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-								</div>
-								<div class="ps__rail-y" style="top: 0px; right: 0px;">
-									<div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-								</div>
+								{% for chat in chats %}
+									{% for participant in chat.participants.all %}
+										{% if user.username != participant.username %}
+											<!-- Chat -->
+											<a data-chat="{{chat.id}}" onclick="chat_click(this);" class="list-group-item list-group-item-action {% if chat == selected_chat %} active {% endif %}">
+												<i class="fas fa-user-circle"></i>
+												<div class="media-body ml-3">
+													{{participant.username}}
+												</div>
+												<div class="badge chat-badge"></div>
+											</a>
+											<!-- Chat -->
+										{% endif %}
+									{% endfor %}
+								{% endfor %}
+								
 							</div>
 							<!-- / .chat-contacts -->
 						</div>
 					</div>
 					<div class="chat-mainbox d-flex col flex-column">
-						<!-- Chat header -->
-						<div class="flex-grow-0 py-3 pr-4 pl-lg-4" style="border-bottom: 1px solid #ffffff38;">
-							<div class="media align-items-center">
-								<a href="javascript:void(0)" class="chat-sidebox-toggler d-lg-none d-block text-muted text-large px-4 mr-2" ><i class="ion ion-md-more" style="font-size: 36px; color:#8e8d8d !important;"></i></a>
-								<div class="position-relative">
-									<span class="badge badge-dot badge-success indicator"></span>
-									<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-								</div>
-								<div class="media-body pl-3 text-w">
-									<strong>Kenneth Frazier</strong>
-								</div>
+						<!-- Unselected chat -->
+						<div class="unselected-chat-container" style="{% if selected_chat == None %} display: flex; {% else %} display: none; {% endif %};">
+							<div>
+								<span class="header text-white" style="font-size:40px;">You don’t have a</br> message selected</span>
+							</div>
+							<div>
+								<span class="chat-text p">Choose one from your existing messages</span>
 							</div>
 						</div>
-						<hr class="flex-grow-0 border-light m-0">
-						<!-- / Chat header -->
-						<!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
-						<div class="flex-grow-1 position-relative">
-							<!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
-							<div class="chat-messages chat-scroll custom-scrollbar p-4 ps">
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:33 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:34 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
+					
+						<!-- Unselected chat -->
+						<div class="chat-mainbox d-flex col flex-column" style="{% if selected_chat != None %} display: block; {% else %} display: none; {% endif %};">
+							<!-- Selected chat -->
+								<!-- Chat header -->
+								<div class="flex-grow-0 py-3 pr-4 pl-lg-4" style="border-bottom: 1px solid #ffffff38;">
+									<div class="media align-items-center">
+										<a href="javascript:void(0)" class="chat-sidebox-toggler d-lg-none d-block text-muted text-large px-4 mr-2" ><i class="ion ion-md-more" style="font-size: 36px; color:#8e8d8d !important;"></i></a>
+										<div class="position-relative">
+											<span class="badge badge-dot badge-success indicator"></span>
+											<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
+										</div>
+										<div class="media-body pl-3 text-w">
+											{% if selected_chat != None %}
+												{% for participant in selected_chat.participants.all %}
+													{% if user.username != participant.username %}
+														{{participant}}
+													{% endif %}
+												{% endfor %}
+											{% endif %}
+										</div>
 									</div>
 								</div>
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:35 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Cum ea graeci tractatos.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:36 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Sed pulvinar, massa vitae interdum pulvinar, risus lectus porttitor magna, vitae commodo lectus mauris et velit. Proin ultricies placerat imperdiet. Morbi varius quam ac venenatis tempus.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:37 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Cras pulvinar, sapien id vehicula aliquet, diam velit elementum orci.
-									</div>
-								</div>
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:38 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:39 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
-									</div>
-								</div>
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:40 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Cum ea graeci tractatos.
-									</div>
-								</div>
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:41 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Morbi finibus, lorem id placerat ullamcorper, nunc enim ultrices massa, id dignissim metus urna eget purus.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:42 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Sed pulvinar, massa vitae interdum pulvinar, risus lectus porttitor magna, vitae commodo lectus mauris et velit. Proin ultricies placerat imperdiet. Morbi varius quam ac venenatis tempus.
-									</div>
-								</div>
-								<div class="chat-message-right mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:43 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">You</div>
-										Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
-									</div>
-								</div>
-								<div class="chat-message-left mb-4">
-									<div>
-										<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
-										<div class="text-muted small text-nowrap mt-2">2:44 am</div>
-									</div>
-									<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
-										<div class="font-weight-semibold mb-1 chat-text-username">Kenneth Frazier</div>
-										Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
-									</div>
-								</div>
-								<div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-									<div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-								</div>
-								<div class="ps__rail-y" style="top: 0px; right: 0px;">
-									<div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-								</div>
-							</div>
-							<!-- / .chat-messages -->
-						</div>
-						<!-- Chat footer -->
-						<hr class="border-light m-0">
-						<div class="flex-grow-0 py-3 px-4" style="border-top: 1px solid #ffffff38;">
-							<div class="input-group">
-								<input type="text" class="form-control chat-input" placeholder="Type your message" style="height: 55px; background-color: black; color: white; ">
-								<div class="input-group-append">
-									<button type="button">
-										<a class="chat-send" data-toggle="modal" data-target="#twit-modal">
-											<i class="fas fa-feather-alt"></i>
-										</a>
-									</button>
+								<hr class="flex-grow-0 border-light m-0">
+								<!-- / Chat header -->
+								<!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
+								<div class="flex-grow-1 position-relative">
+									<!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
+									<!-- / .chat-messages -->
+									<div class="chat-messages chat-scroll custom-scrollbar p-4 ps">
+										{% if selected_chat != None %}
+											{% for message in selected_chat.chat_messages|get_inbox_messages:user %}
+													{% if user == message.sender %}
+														<div class="chat-message-right mb-4">
+															<div>
+																<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
+																<div class="text-muted  text-nowrap mt-2">{{message.timestamp|time:'P'}}</div>
+															</div>
+															<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 mr-3">
+																<div class="font-weight-semibold mb-1 chat-text-username">{{message.sender}}</div>
+																{{message.message}}
+															</div>
+														</div>
+													{% else %}
+														<div class="chat-message-left mb-4">
+															<div>
+																<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
+																<div class="text-muted  text-nowrap mt-2">{{message.timestamp|time:'P'}}</div>
+															</div>
+															<div class="chat-text flex-shrink-1 chat-item rounded py-2 px-3 ml-3">
+																<div class="font-weight-semibold mb-1 chat-text-username">{{message.sender}}</div>
+																{{message.message}}
+															</div>
+														</div>
+													{% endif %}
+												{% endfor %}
+										{% endif %}
 									
+									</div>
+									<!-- / .chat-messages -->
 								</div>
-							</div>
+								<!-- Chat footer -->
+								<hr class="border-light m-0">
+								<div class="flex-grow-0 py-3 px-4" style="border-top: 1px solid #ffffff38;">
+									<div class="input-group">
+										<input type="text" class="form-control chat-input" placeholder="Type your message" style="height: 55px; background-color: black; color: white; ">
+										<div class="input-group-append">
+											<button type="button">
+												<a class="chat-send" data-toggle="modal" data-target="#twit-modal">
+													<i class="fas fa-feather-alt"></i>
+												</a>
+											</button>
+											
+										</div>
+									</div>
+								</div>
+							<!-- / Chat footer -->
+							<!-- Selected chat -->
 						</div>
-						<!-- / Chat footer -->
 					</div>
 				</div>
 				<!-- / .row -->
@@ -310,6 +155,7 @@
 {% block script %}
 	<script src="{% static 'network/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
 	<script src="{% static 'network/assets/vendor/libs/popper/popper.js' %}"></script>
+	<script src="{% static 'network/assets/js/cookies.js' %}"></script>
 	<script src="{% static 'network/assets/js/pages_chat.js' %}"></script>
 {% endblock %}
 
