@@ -1,8 +1,8 @@
 
 
 {% extends "network/layout2.html" %}
-{% load static %}
 {% load inbox_messages %}
+{% load static %}
 {% block stylesheet %}
 	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/pages/chat.css' %}">
 	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/uikit.css' %}">
@@ -31,17 +31,28 @@
 						<!-- / Chat contacts header -->
 						<!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
 						<div class="flex-grow-1 position-relative">
-							<div class="chat-contacts list-group disable-scrollbars py-3 ps">
+							<div id="chat-list" class="chat-contacts list-group disable-scrollbars py-3 ps">
+                                {% if new_chat != None %}
+                                    <!-- Chat -->
+                                        <a id="contact-{{new_chat.id}}" data-chat="{{new_chat.id}}" onclick="chat_click(this);" class="list-group-item list-group-item-action active new-chat">
+                                            <i class="fas fa-user-circle"></i>
+                                            <div class="media-body ml-3">
+                                                {{new_chat.recipient.username}}
+                                            </div>
+                                            <div class="badge chat-badge" id="contact-badge--1" data-badge=""></div>
+                                        </a>
+                                    <!-- Chat -->
+                                {% endif %}
 								{% for chat in chats %}
 									{% for participant in chat.participants.all %}
 										{% if user.username != participant.username %}
 											<!-- Chat -->
-											<a data-chat="{{chat.id}}" onclick="chat_click(this);" class="list-group-item list-group-item-action {% if chat == selected_chat %} active {% endif %}">
+											<a id="contact-{{chat.id}}" data-chat="{{chat.id}}" onclick="chat_click(this);" class="list-group-item list-group-item-action {% if chat == selected_chat %} active {% endif %}">
 												<i class="fas fa-user-circle"></i>
 												<div class="media-body ml-3">
 													{{participant.username}}
 												</div>
-												<div class="badge chat-badge"></div>
+												<div class="badge chat-badge {% if chat|get_unread_count:user == 0 %} d-none {% endif %}" id="contact-badge-{{chat.id}}" data-badge="{{chat|get_unread_count:user}}">{{chat|get_unread_count:user}}</div>
 											</a>
 											<!-- Chat -->
 										{% endif %}
@@ -54,17 +65,22 @@
 					</div>
 					<div class="chat-mainbox d-flex col flex-column">
 						<!-- Unselected chat -->
-						<div class="unselected-chat-container" style="{% if selected_chat == None %} display: flex; {% else %} display: none; {% endif %};">
+						<div id="unselected-chat-container" class="unselected-chat-container" style="{% if selected_chat == None and new_chat == None %} display: flex; {% else %} display: none; {% endif %};">
 							<div>
 								<span class="header text-white" style="font-size:40px;">You don’t have a</br> message selected</span>
 							</div>
 							<div>
 								<span class="chat-text p">Choose one from your existing messages</span>
 							</div>
+							<div>
+								<button class="add-twit-button chat-sidebox-toggler" style="margin-top: 25px;">
+                                    Open chat
+                                </button>
+							</div>
 						</div>
 					
 						<!-- Unselected chat -->
-						<div class="chat-mainbox d-flex col flex-column" style="{% if selected_chat != None %} display: block; {% else %} display: none; {% endif %};">
+						<div id="chat-mainbox" class="chat-mainbox d-flex col flex-column" style="{% if selected_chat != None or new_chat != None %} display: block; {% else %} display: none; {% endif %};">
 							<!-- Selected chat -->
 								<!-- Chat header -->
 								<div class="flex-grow-0 py-3 pr-4 pl-lg-4" style="border-bottom: 1px solid #ffffff38;">
@@ -74,14 +90,17 @@
 											<span class="badge badge-dot badge-success indicator"></span>
 											<a href="javascript:void(0)"><i class="fas fa-user-circle"></i></a>
 										</div>
-										<div class="media-body pl-3 text-w">
+										<div id="chat-header-username" class="media-body pl-3 text-w">
 											{% if selected_chat != None %}
 												{% for participant in selected_chat.participants.all %}
 													{% if user.username != participant.username %}
-														{{participant}}
+														{{participant.username}}
 													{% endif %}
 												{% endfor %}
 											{% endif %}
+                                            {% if new_chat != None %}
+                                                {{new_chat.recipient.username}}
+                                            {% endif %}
 										</div>
 									</div>
 								</div>
@@ -91,9 +110,19 @@
 								<div class="flex-grow-1 position-relative">
 									<!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
 									<!-- / .chat-messages -->
-									<div class="chat-messages chat-scroll custom-scrollbar p-4 ps">
+									<div id="message-list" data-chat="{% if selected_chat != None %}{{selected_chat.id}}{% endif %}" class="chat-messages chat-scroll custom-scrollbar p-4 ps">
 										{% if selected_chat != None %}
+                                            {% define selected_chat.chat_messages|first_message_date:user as last_date %}
+                                            <div class="chat-date-separator" id="{{last_date|date:'M-j-Y' }}">
+                                                {{last_date}}
+                                            </div>
 											{% for message in selected_chat.chat_messages|get_inbox_messages:user %}
+                                                    {% if message.timestamp.date > last_date %}
+                                                        {% define message.timestamp.date as last_date %}
+                                                        <div class="chat-date-separator" id="{{last_date|date:'M-j-Y' }}">
+                                                            {{last_date}}
+                                                        </div>
+                                                    {% endif %}
 													{% if user == message.sender %}
 														<div class="chat-message-right mb-4">
 															<div>
@@ -127,10 +156,10 @@
 								<hr class="border-light m-0">
 								<div class="flex-grow-0 py-3 px-4" style="border-top: 1px solid #ffffff38;">
 									<div class="input-group">
-										<input type="text" class="form-control chat-input" placeholder="Type your message" style="height: 55px; background-color: black; color: white; ">
+										<input id="chat-message-input" type="text" class="form-control chat-input" placeholder="Type your message" style="height: 55px; background-color: black; color: white; ">
 										<div class="input-group-append">
 											<button type="button">
-												<a class="chat-send" data-toggle="modal" data-target="#twit-modal">
+												<a id="chat-message-submit" class="chat-send" data-chat="{% if selected_chat != None %}{{selected_chat.id}}{% endif %}{% if new_chat != None %}{{new_chat.id}}{% endif %}" data-recipient="{% if selected_chat != None %}{{selected_chat.participants|get_recipient:user}}{% endif %}{% if new_chat != None %}{{new_chat.recipient.id}}{% endif %}">
 													<i class="fas fa-feather-alt"></i>
 												</a>
 											</button>
@@ -149,13 +178,53 @@
 		</div>
 		<!-- / .chat-wrapper -->
 	</div>
+    <div id="twit-modal" class="modal" tabindex="-1" role="dialog" style="background: #a8a8a84d;">
+		<div class="modal-dialog" role="document" style="min-width: 590px;">
+			  <div class="modal-content" style="background: black; border-radius: 15px;">
+				<div class="modal-header" style="border-bottom: 1px solid #ffffff6e;">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" >
+					<form action="{% url 'index' %}" method="POST">
+						{% csrf_token %}
+						<div class="">
+							<div class="write-twit">
+								<div class="">
+									<i class="fas fa-user-circle"></i>
+								</div>
+								<textarea name="post" id="post" cols="30" rows="3" placeholder="what's happening?"></textarea>	
+							</div>
+						<div style="display: flex; justify-content: right; ">
+							<button class="add-twit-button" style="width: 100px; height: 40px; margin-top: 15px; margin-bottom: 20px; margin-right: 6%;">
+								New Post
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		  </div>
+		</div>
+	</div>
 	<!-- / Content -->
+	{{ user.serialize|json_script:"user" }}
+    {{ last_date|json_script:"last-date" }}
+    {% if selected_chat != None %}
+        {{ selected_chat.id|json_script:"current-chat" }}
+    {% elif new_chat != None %}
+        {{ new_chat.id|json_script:"current-chat" }}
+    {% else %}
+        {{ 0|json_script:"current-chat" }}
+    {% endif %}
+    
 </div>
 {% endblock %}
 {% block script %}
 	<script src="{% static 'network/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
 	<script src="{% static 'network/assets/vendor/libs/popper/popper.js' %}"></script>
 	<script src="{% static 'network/assets/js/cookies.js' %}"></script>
+    <script src="{% static 'network/assets/js/main.js' %}"></script>
 	<script src="{% static 'network/assets/js/pages_chat.js' %}"></script>
 {% endblock %}
 

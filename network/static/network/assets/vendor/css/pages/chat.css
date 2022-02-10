@@ -269,6 +269,19 @@
     line-height: 55px;
 }
 
+.chat-date-separator {
+    background: rgba(181, 181, 181, 0.15) !important;
+    font-size: 15px;
+    color: #aaa7a7;
+    width: fit-content;
+    padding: 5px 20px;
+    border-radius: 50px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
 @media (min-width: 992px){
     .chat-sidebox{
         position:relative !important;

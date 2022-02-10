@@ -1,4 +1,5 @@
 import json
+import re
 from select import select
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -10,6 +11,7 @@ from django.template import library
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage
 from .models import *
+from datetime import datetime
 
 def index(request):
     if not request.user.is_authenticated:
@@ -26,15 +28,6 @@ def index(request):
 
     return render(request, "network/index.html", {"page": page, "header":"All Posts"})
 
-def chat(request):
-    return render(request, "network/chat.html")
-
-
-def room(request, room_name):
-    return render(request, 'network/room.html', {
-        'room_name': request.user.id
-    })
-
 def profile(request, user_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
@@ -48,7 +41,7 @@ def profile(request, user_id):
         posts = Post.objects.filter(user=user).order_by('-date_created').all()
         page = Paginator(posts, 10).page(page)
 
-        #check if request user if following user
+        #check if request user is following user
         if request.user != user:
             if request.user in user.followers.all():
                 is_following = True
@@ -88,12 +81,48 @@ def following(request):
 def messages(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
+
+    #if user desires to message another user for the first time
+    r_new = request.GET.get('chat', None)
+    sender_id = request.GET.get('s', None)
+    recipient_id = request.GET.get('r', None)
+    if (r_new is not None) and (sender_id is not None) and (recipient_id is not None):
+        #validate user ids
+        valid = True
+        try:
+            sender = User.objects.get(pk=sender_id)
+        except User.DoesNotExist:
+            valid = False
+        
+        try:
+            recipient = User.objects.get(pk=recipient_id)
+        except User.DoesNotExist:
+            valid = False
+
+        if valid:
+            try:
+                chat = Chat.objects.get(participants=recipient)
+                return HttpResponseRedirect(reverse('chat_messages', args=(chat.id,)))
+            except Chat.DoesNotExist:
+                new_chat = {
+                    'id': -1,
+                    'sender': sender.serialize(),
+                    'recipient': recipient.serialize(),
+                    'messages':[]
+                }
+        else:
+            new_chat = None
+    else:
+        new_chat = None
     
+    #when no chat is selected
     selected_chat = None
-    chats = Chat.objects.filter(participants=request.user).order_by('last_activity').all()
+
+    chats = Chat.objects.filter(participants=request.user).order_by('-last_activity').all()
     context = {
         'chats': chats,
-        'selected_chat': selected_chat
+        'selected_chat': selected_chat,
+        'new_chat': new_chat
     }
     return render(request, "network/messages.html", context)
 
@@ -101,36 +130,64 @@ def chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
 
+    chat = None
     try:
         chat = Chat.objects.get(pk=chat_id)
 
-        chats = Chat.objects.filter(participants=request.user).order_by('last_activity').all()
-        context = {
-            'chats': chats,
-            'selected_chat': chat
-        }
-
-        return render(request, "network/messages.html", context)
     except Chat.DoesNotExist:
         raise Http404("Chat does not exist")
-def json_chat_messages(request, chat_id):
+    else:
+        if request.user not in chat.participants.all():
+            context = {
+                'message': 'You are not a participant in this chat'
+            }
+
+            return render(request, "network/error.html", context)
+        else:
+            chats = Chat.objects.filter(participants=request.user).order_by('-last_activity').all()
+            context = {
+                'chats': chats,
+                'selected_chat': chat,
+                'current_date': datetime.now()
+            }
+
+            return render(request, "network/messages.html", context)
+def get_chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return JsonResponse({
             "error": "Access denied."
         }, status=403)
-    try:
-        chat = Chat.objects.get(pk=chat_id)
-    except Chat.DoesNotExist:
-        return JsonResponse({
-            "error": "The chat does not exist"
-        }, status=201)
-
+    
     if request.method == "GET":
-        context = {
-            'chat': chat.serialize(request.user)
-        }
+        try:
+            chat = Chat.objects.get(pk=chat_id)
+        except Chat.DoesNotExist:
+            return JsonResponse({
+                "error": "The chat does not exist"
+            }, status=201)
 
-        return JsonResponse(context, status=201)
+        #paginate messages
+        order = request.GET.get('order', 'asc')
+        page = request.GET.get('page', 1)
+        limit = 14
+        paginator = Paginator(chat.chat_messages.filter(user=request.user).order_by('-timestamp').all(), limit)
+        messages = []
+        try:
+            page = paginator.page(page)
+            for message in page.object_list:
+                messages.append(message.serialize()) 
+            if order == "asc":
+                messages.reverse()
+        except EmptyPage:
+            pass
+        
+        data = {
+            'id': chat.id,
+            'last_activity': chat.last_activity.strftime("%b %d %Y, %I:%M %p"),
+            'participants': [{'id': participant.id, 'username': participant.username} for participant in chat.participants.all()],
+            'messages': messages
+        }
+        return JsonResponse(data, status=201)
 
 def user_following(request, user_id):
     if not request.user.is_authenticated:

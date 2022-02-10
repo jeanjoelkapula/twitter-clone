@@ -581,9 +581,15 @@ iframe {
 .menu .menu-item .menu-link {
   width: 55px;
   height: 55px;
-  display: block;
+  display: flex;
   text-align: center;
+  justify-content: center;
   border-radius: 50%;
+}
+
+.menu-icon-badge {
+    display: none !important;
+    position: absolute;
 }
 
 .menu .menu-item .menu-link-text {
@@ -717,7 +723,7 @@ i + span{
 .side-main .write-twit img {
   margin-bottom: 20px;
 }
-.side-main .write-twit textarea {
+ .write-twit textarea {
   border: 0;
   color: #999;
   padding: 10px;
@@ -789,6 +795,9 @@ i + span{
 
   .menu .menu-item .menu-link {
     margin-left: auto;
+  }
+  .menu-icon-badge {
+      display: flex !important;
   }
 
   .menu .menu-item .menu-link:hover {

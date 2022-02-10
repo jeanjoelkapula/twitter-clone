@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load inbox_messages %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -75,11 +75,13 @@
                             <li class="menu-item">
                                 <a class="menu-link" href="{% url 'messages' %}">
                                     <i class="far fa-envelope"></i>
+                                    <span class="badge chat-badge m-badge {% if user|get_total_unread_count != '' %} menu-icon-badge {% endif %}" id="messages-badge-">{{user|get_total_unread_count}}</span> 
                                 </a>
                                 <a href="{% url 'messages' %}" class="menu-link-text">
                                     <div >
                                         <span>Messages</span>
-                                    </div>    
+                                    </div>   
+                                    <div class="badge chat-badge m-badge" id="messages-badge-" style="margin-left: 5px;">{{user|get_total_unread_count}}</div> 
                                 </a>
                             </li>
                             <li class="menu-item">
@@ -143,6 +145,19 @@
             <script src="{% static 'network/assets/vendor/countdowntime/countdowntime.js' %}"></script>
         <!--===============================================================================================-->
 
+        {{ user.id|json_script:"room-name" }}
+        <script>
+            //establish connection to server
+            room_name = JSON.parse(document.getElementById('room-name').textContent);
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/chat/'
+                + room_name
+                + '/'
+            );
+        </script>
+        
         {% block script %}
 
         {% endblock %}

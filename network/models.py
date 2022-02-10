@@ -73,6 +73,14 @@ class Chat(models.Model):
             'participants': [{'id': participant.id, 'username': participant.username} for participant in self.participants.all()],
             'messages': [message.serialize() for message in self.chat_messages.filter(user=user).all()]
         }
+    
+    def get_latest_messages(self, user):
+        limit = 5
+        offset = len(self.chat_messages.all()) - (1 * limit)
+        return self.chat_messages.filter(user=user).order_by('timestamp').all()[offset:limit+offset]
+
+    def get_unread_count(self, user):
+        return len(self.chat_messages.filter(user=user, recipient=user, read=False))
 
 class ChatMessage(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="user_messages")
@@ -94,4 +102,4 @@ class ChatMessage(models.Model):
         }
     
     def __str__(self):
-        return f"{self.chat} {self.user.username}"
+        return f"{self.chat} {self.user.username} {self.message}"

@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% load inbox_messages %}
 {% block body %}
 <div class="side-main"> 
 	<div class="top-fixed">
@@ -24,11 +25,13 @@
 					<span id="followers">{{followers}}</span><p><a href="{% url 'followers' profile_user.id 'followers' %}">Followers</a></p>
 				</div>
 				<div style="display: flex; margin-left: auto;">
-                    <div>
-                        <a href="" class="profile-message-button">
-                            <i class="far fa-envelope"></i>
-                        </a>
-                    </div>
+                    {% if profile_user != user %}
+                        <div>
+                            <a href="{% url 'messages' %}?chat='new'&s={{user.id}}&r={{profile_user.id}}" class="profile-message-button">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    {% endif %}
 					{% if is_following != None %}
 						<div id="unfollow-div" class="unfollow-button" style="{% if is_following %} display: block; {% else %} display: none; {% endif %}">
 							<button data-id = "{{profile_user.id}}" onclick="unfollow_user(this.dataset.id);"><span style="margin-right: 0px;">Following</span></button>

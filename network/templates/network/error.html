@@ -1,0 +1,41 @@
+{% extends "network/layout2.html" %}
+{% load static %}
+{% load inbox_messages %}
+{% block stylesheet %}
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/pages/chat.css' %}">
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/uikit.css' %}">
+	<link rel="stylesheet" href="{% static 'network/assets/vendor/css/rtl/appwork.css' %}">
+{% endblock %}
+{% block body %}
+    <!-- Content -->
+	<div class="container-fluid d-flex align-items-stretch flex-grow-1 p-0">
+		<!-- `.chat-wrapper` fills all available space of container -->
+		<div class="chat-wrapper">
+			<!-- Make card full height of `.chat-wrapper` -->
+			<div class="flex-grow-1 position-relative overflow-hidden" style="background-color: black;">
+	
+					<div class="chat-mainbox d-flex col flex-column" style="height: 100vh;">
+						<!-- Unselected chat -->
+						<div id="unselected-chat-container" class="unselected-chat-container" >
+							<div>
+								<span class="header text-white" style="font-size:40px;">{{message}}</span>
+							</div>
+							<div>
+								<span class="chat-text p"></span>
+							</div>
+							<div>
+
+							</div>
+						</div>
+					
+						<!-- Unselected chat -->
+					</div>
+				</div>
+				<!-- / .row -->
+			</div>
+			<!-- / .card -->
+		</div>
+		<!-- / .chat-wrapper -->
+	</div>
+	<!-- / Content -->
+{% endblock %}
