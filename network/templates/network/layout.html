@@ -129,7 +129,7 @@
         <script>
             //establish connection to server
             room_name = JSON.parse(document.getElementById('room-name').textContent);
-            ws_scheme = window.location.protocol == "https" ? "wss" : "ws";
+            ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 
             const chatSocket = new WebSocket(
                 ws_scheme + '://'
