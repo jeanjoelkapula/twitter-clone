@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = ((os.environ.get('DEBUG_VALUE')) == 'True')
 
 ALLOWED_HOSTS = ['rever-twitter.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.rever-twitter.herokuapp.com','https://*.127.0.0.1']
 
 
 # Application definition
