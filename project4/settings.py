@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
+from util import parse_redis_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,15 +83,22 @@ CHANNEL_LAYERS = {
 }
 '''
  
+REDIS_URL = os.environ.get('REDIS_URL', default='redis://localhost:6379')
+REDIS_HOST, REDIS_PORT, REDIS_USER, REDIS_PASSWORD, REDIS_DB = parse_redis_url(REDIS_URL)
+
+# DJANGO CHANNELS
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(os.environ.get('REDIS_URL'), 'redis://localhost:6379')],
+            "hosts": [{
+                'address': f'redis://{REDIS_HOST}:{REDIS_PORT}',
+                'db': REDIS_DB,
+                'password': REDIS_PASSWORD,
+            }],
         },
     },
 }
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
